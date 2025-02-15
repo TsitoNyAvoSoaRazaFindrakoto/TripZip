@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" version="2.4">
+    <servlet>
+        <servlet-name>FrontServlet</servlet-name>
+        <servlet-class>mg.itu.prom16.FrontController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FrontServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <context-param>
+        <param-name>controllerPackage</param-name>
+        <param-value>controlleurs</param-value>
+    </context-param>
+		<context-param>
+        <param-name>roleMapping</param-name>
+        <param-value>role</param-value>
+    </context-param>
+</web-app>
