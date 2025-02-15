@@ -61,6 +61,7 @@ CREATE TABLE Sieges_Avions(
 CREATE TABLE Reservation(
    Id_Reservation SERIAL,
    contact VARCHAR(50)  NOT NULL,
+   date_reservation TIMESTAMP NOT NULL,
    Id_Vol INTEGER NOT NULL,
    PRIMARY KEY(Id_Reservation),
    FOREIGN KEY(Id_Vol) REFERENCES Vol(Id_Vol)
@@ -70,10 +71,10 @@ CREATE TABLE Places_Reservation(
    Id_Places_Reservation SERIAL,
    nombre INTEGER NOT NULL,
    prix_unitaire NUMERIC(17,2)   NOT NULL,
-   Id_PrixSiegeVol INTEGER NOT NULL,
+   Id_Siege INTEGER NOT NULL,
    Id_Reservation INTEGER NOT NULL,
    PRIMARY KEY(Id_Places_Reservation),
-   FOREIGN KEY(Id_PrixSiegeVol) REFERENCES Prix_Siege_Vol(Id_PrixSiegeVol),
+   FOREIGN KEY(Id_Siege) REFERENCES Siege(Id_Siege),
    FOREIGN KEY(Id_Reservation) REFERENCES Reservation(Id_Reservation)
 );
 
