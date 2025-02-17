@@ -26,4 +26,5 @@ LEFT JOIN Places_Reservation pr
 		FROM Reservation
 		WHERE Id_Vol = v.Id_Vol
 	)
-GROUP BY v.Id_Vol, s.Id_Siege, sa.nombre, psv.montant, psv.prom, psv.siege_prom;
+GROUP BY v.Id_Vol, s.Id_Siege, sa.nombre, psv.montant, psv.prom, psv.siege_prom
+HAVING (sa.nombre - COALESCE(SUM(pr.nombre), 0)) > 0;
