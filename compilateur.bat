@@ -1,10 +1,6 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-REM Load environment variables from .env file
-for /f "tokens=1* delims==" %%a in ('.env') do (
-    set "%%a=%%b"
-)
 
 rem Définir le chemin d'accès au répertoire des sources et au répertoire de destination des fichiers compilés
 set "sourceDirectory=src"
