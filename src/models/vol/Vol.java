@@ -60,4 +60,6 @@ public class Vol {
 	public void setIdVille1(int idVille1) {
 		this.idVille1 = idVille1;
 	}
+
+	
 }

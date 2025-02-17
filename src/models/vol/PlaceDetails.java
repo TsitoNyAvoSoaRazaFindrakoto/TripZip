@@ -6,6 +6,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ */
 public record PlaceDetails(
 		int idVol,
 		int idSiege,

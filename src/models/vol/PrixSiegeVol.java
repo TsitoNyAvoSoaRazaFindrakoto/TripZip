@@ -2,6 +2,8 @@ package models.vol;
 
 import java.math.BigDecimal;
 
+import models.Siege;
+
 public class PrixSiegeVol {
 	private int idPrixSiegeVol;
 	private BigDecimal montant;
@@ -9,6 +11,8 @@ public class PrixSiegeVol {
 	private int siegeProm;
 	private int idSiege;
 	private int idVol;
+
+	private Siege siege;
 
 	public PrixSiegeVol() {
 	}
@@ -59,5 +63,37 @@ public class PrixSiegeVol {
 
 	public void setIdVol(int idVol) {
 		this.idVol = idVol;
+	}
+
+	
+
+	public Siege getSiege(java.sql.Connection c) {
+		if (this.siege != null) {
+			return this.siege;
+		}
+		if (c == null) {
+			return null;
+		}
+		try {
+			java.sql.PreparedStatement ps = c.prepareStatement("SELECT * FROM Siege WHERE Id_Siege = ?");
+			ps.setInt(1, this.idSiege);
+			java.sql.ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				Siege siege = new Siege(rs.getInt("Id_Siege"), rs.getString("nom"));
+				this.setSiege(siege);
+				return siege;
+			}
+		} catch (java.sql.SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Siege getSiege() {
+		return siege;
+	}
+
+	public void setSiege(Siege siege) {
+		this.siege = siege;
 	}
 }

@@ -1,9 +1,13 @@
 package models.avion;
 
+import models.Siege;
+
 public class SiegesAvions {
 	private int idSiege;
 	private int idAvion;
 	private int nombre;
+
+	private Siege siege;
 
 	public SiegesAvions() {
 	}
@@ -30,5 +34,18 @@ public class SiegesAvions {
 
 	public void setNombre(int nombre) {
 		this.nombre = nombre;
+	}
+
+	public Siege getSiege() {
+		return siege;
+	}
+
+	public void setSiege(Siege siege) {
+		this.siege = siege;
+	}
+
+	public Siege getSiege(java.sql.Connection c) {
+		setSiege(siege.getById(c, idSiege));
+		return siege;
 	}
 }

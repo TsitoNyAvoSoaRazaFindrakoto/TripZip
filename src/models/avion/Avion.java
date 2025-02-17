@@ -7,6 +7,8 @@ public class Avion {
 	private String modele;
 	private LocalDate fabrication;
 
+	private SiegesAvions[] sieges;
+
 	public Avion() {
 	}
 
@@ -33,4 +35,16 @@ public class Avion {
 	public void setFabrication(LocalDate fabrication) {
 		this.fabrication = fabrication;
 	}
+
+	public SiegesAvions[] getSieges() {
+		return sieges;
+	}
+
+	public void setSieges(SiegesAvions[] sieges) {
+		this.sieges = sieges;
+	}
+
+	// TODO: getAll from database and getById
+	// TODO: getSieges
+	
 }
