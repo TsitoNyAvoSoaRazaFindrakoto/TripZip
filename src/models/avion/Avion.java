@@ -88,7 +88,8 @@ public class Avion {
 			java.sql.PreparedStatement statement = connection.prepareStatement("SELECT * FROM Avion");
 			java.sql.ResultSet result = statement.executeQuery();
 			while (result.next()) {
-				Avion avion = new Avion(result.getInt("Id_Avion"), result.getString("modele"), result.getDate("fabrication").toLocalDate());
+				Avion avion = new Avion(result.getInt("Id_Avion"), result.getString("modele"),
+						result.getDate("fabrication").toLocalDate());
 				avions.add(avion);
 			}
 			statement.close();
@@ -105,5 +106,22 @@ public class Avion {
 		return avions;
 	}
 
-	
+	// getSieges(Connection c,int idAvion)
+	public SiegesAvions[] getSieges(Connection connection) {
+		boolean nullConn = connection == null;
+		if (nullConn) {
+			connection = database.Connect.getConnection();
+		}
+		if (this.sieges == null) {
+			this.sieges = SiegesAvions.getByIdAvion(connection, this.idAvion).toArray(new SiegesAvions[0]);
+		}
+		if (nullConn) {
+			try {
+				connection.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return this.sieges;
+	}
 }
