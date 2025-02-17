@@ -79,4 +79,27 @@ public class ConfigReservation {
 		}
 		return list;
 	}
+
+	public void update(java.sql.Connection connection) {
+		boolean nullConn = connection == null;
+		if (nullConn)
+			connection = database.Connect.getConnection();
+		try {
+			java.sql.PreparedStatement statement = connection.prepareStatement(
+					"UPDATE Config_reservation SET duree = ? WHERE libelle = ?");
+			statement.setString(1, duree.toString());
+			statement.setString(2, libelle);
+			statement.executeUpdate();
+			statement.close();
+			if (nullConn)
+				connection.close();
+		} catch (Exception e) {
+			try {
+				connection.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+	}
 }

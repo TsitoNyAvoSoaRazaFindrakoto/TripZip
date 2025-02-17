@@ -1,6 +1,10 @@
 package models.avion;
 
 import models.Siege;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class SiegesAvions {
 	private int idSiege;
@@ -8,6 +12,7 @@ public class SiegesAvions {
 	private int nombre;
 
 	private Siege siege;
+	private Avion avion;
 
 	public SiegesAvions() {
 	}
@@ -44,9 +49,30 @@ public class SiegesAvions {
 		this.siege = siege;
 	}
 
-	public Siege getSiege(java.sql.Connection c) {
-		setSiege(siege.getById(c, idSiege));
-		return siege;
+	public Siege getSiege(Connection c) throws SQLException {
+		boolean local = false;
+		if(c == null){
+			c = database.Connect.getConnection();
+			local = true;
+		}
+		if(this.siege == null){
+			this.siege = new models.Siege().getById(c, this.idSiege);
+		}
+		if(local) c.close();
+		return this.siege;
+	}
+
+	public Avion getAvion(Connection c) throws SQLException {
+		boolean local = false;
+		if(c == null){
+			c = database.Connect.getConnection();
+			local = true;
+		}
+		if(this.avion == null){
+			this.avion = new Avion().getById(c, this.idAvion);
+		}
+		if(local) c.close();
+		return this.avion;
 	}
 
 	// Added getById and getAll methods using Siege.java as template

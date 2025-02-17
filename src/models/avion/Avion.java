@@ -13,15 +13,11 @@ public class Avion {
 	public Avion() {
 	}
 
-	
-
 	public Avion(int idAvion, String modele, LocalDate fabrication) {
 		this.idAvion = idAvion;
 		this.modele = modele;
 		this.fabrication = fabrication;
 	}
-
-
 
 	public int getIdAvion() {
 		return idAvion;

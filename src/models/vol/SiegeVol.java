@@ -3,6 +3,10 @@ package models.vol;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import models.Siege;
 
@@ -15,6 +19,7 @@ public class SiegeVol {
 	private int idVol;
 
 	private Siege siege;
+	private Vol vol;
 
 	public SiegeVol() {
 	}
@@ -67,26 +72,17 @@ public class SiegeVol {
 		this.idVol = idVol;
 	}
 
-	public Siege getSiege(java.sql.Connection c) {
-		if (this.siege != null) {
-			return this.siege;
+	public Siege getSiege(Connection c) throws SQLException {
+		boolean local = false;
+		if(c == null) {
+			c = database.Connect.getConnection();
+			local = true;
 		}
-		if (c == null) {
-			return null;
+		if(this.siege == null) {
+			this.siege = new models.Siege().getById(c, this.idSiege);
 		}
-		try {
-			java.sql.PreparedStatement ps = c.prepareStatement("SELECT * FROM Siege WHERE Id_Siege = ?");
-			ps.setInt(1, this.idSiege);
-			java.sql.ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				Siege siege = new Siege(rs.getInt("Id_Siege"), rs.getString("nom"));
-				this.setSiege(siege);
-				return siege;
-			}
-		} catch (java.sql.SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
+		if(local) c.close();
+		return this.siege;
 	}
 
 	public Siege getSiege() {
@@ -97,8 +93,18 @@ public class SiegeVol {
 		this.siege = siege;
 	}
 
-	// Added getById and getAll methods using Siege.java as template for SiegeVol
-	// Table: Siege_Vol with fields: Id_Siege_Vol, montant, prom, siege_prom, Id_Siege, Id_Vol
+	public Vol getVol(Connection c) throws SQLException {
+		boolean local = false;
+		if(c == null) {
+			c = database.Connect.getConnection();
+			local = true;
+		}
+		if(this.vol == null) {
+			this.vol = new Vol().getById(c, this.idVol);
+		}
+		if(local) c.close();
+		return this.vol;
+	}
 
 	public SiegeVol getById(java.sql.Connection connection, int id) {
 		boolean nullConn = connection == null;
