@@ -18,6 +18,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Reservation {
+	@Exclude
 	private int idReservation;
 	private int idSiegeVol;
 	private String contact;
