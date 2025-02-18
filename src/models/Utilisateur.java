@@ -7,18 +7,17 @@ import java.sql.SQLException;
 import database.Connect;
 
 public class Utilisateur {
-	// attributes based on the database table
-	private int id_utilisateur;
+	private int idUtilisateur;
 	private String email;
 	private String role;
 	private String mdp;
 
-	public int getId_utilisateur() {
-		return id_utilisateur;
+	public int getIdUtilisateur() {
+		return idUtilisateur;
 	}
 
-	public void setId_utilisateur(int id_utilisateur) {
-		this.id_utilisateur = id_utilisateur;
+	public void setIdUtilisateur(int id_utilisateur) {
+		this.idUtilisateur = id_utilisateur;
 	}
 
 	public String getEmail() {
@@ -58,7 +57,7 @@ public class Utilisateur {
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				utilisateur = new Utilisateur();
-				utilisateur.setId_utilisateur(resultSet.getInt("id_utilisateur"));
+				utilisateur.setIdUtilisateur(resultSet.getInt("id_utilisateur"));
 				utilisateur.setEmail(resultSet.getString("email"));
 				utilisateur.setRole(resultSet.getString("role"));
 				utilisateur.setMdp(resultSet.getString("mdp"));

@@ -2,9 +2,14 @@ package models.reservation;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import models.vol.DetailsPlace;
+import models.vol.SiegeVol;
+import models.vol.Vol;
+
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Reservation {
@@ -17,7 +22,7 @@ public class Reservation {
 	private int nombre;
 
 	// New relational object field for the foreign key
-	private models.vol.SiegeVol siegeVol;
+	private SiegeVol siegeVol;
 
 	public Reservation() {
 	}
@@ -87,8 +92,8 @@ public class Reservation {
 		return this;
 	}
 
-	public static java.util.List<Reservation> getAll(java.sql.Connection connection) {
-		java.util.List<Reservation> list = new java.util.ArrayList<>();
+	public static List<Reservation> getAll(java.sql.Connection connection) {
+		List<Reservation> list = new ArrayList<>();
 		boolean nullConn = connection == null;
 		if (nullConn)
 			connection = database.Connect.getConnection();
@@ -143,16 +148,51 @@ public class Reservation {
 		this.idSiegeVol = idSiegeVol;
 	}
 
-	public models.vol.SiegeVol getSiegeVol(Connection c) throws SQLException {
+	public SiegeVol getSiegeVol(Connection c) throws SQLException {
 		boolean local = false;
-		if(c == null) {
+		if (c == null) {
 			c = database.Connect.getConnection();
 			local = true;
 		}
-		if(this.siegeVol == null) {
-			this.siegeVol = new models.vol.SiegeVol().getById(c, this.idSiegeVol);
+		if (this.siegeVol == null) {
+			this.siegeVol = new SiegeVol().getById(c, this.idSiegeVol);
 		}
-		if(local) c.close();
+		if (local)
+			c.close();
 		return this.siegeVol;
 	}
+
+	public Reservation validateReservation() {
+		try {
+			SiegeVol siegeVol = this.getSiegeVol(null);
+			if (siegeVol == null) {
+				return null; // SiegeVol not found
+			}
+
+			Vol vol = siegeVol.getVol(null);
+			if (vol == null) {
+				return null; // Vol not found
+			}
+
+			LocalDateTime reservationDeadline = vol.getReservation();
+			if (reservationDeadline == null || this.dateReservation.isAfter(reservationDeadline)) {
+				return null;
+			}
+
+			if (this.nombre <= 0) {
+				return null;
+			}
+
+			DetailsPlace details = DetailsPlace.getByIdVolAndIdSiege(vol.getIdVol(), siegeVol.getIdSiege());
+			if (details == null || this.nombre > details.disponible()) {
+				return null;
+			}
+
+			return this;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

@@ -232,40 +232,43 @@ public class Vol {
 
 	public models.avion.Avion getAvion(Connection c) throws SQLException {
 		boolean local = false;
-		if(c == null) {
+		if (c == null) {
 			c = database.Connect.getConnection();
 			local = true;
 		}
-		if(this.avion == null) {
+		if (this.avion == null) {
 			this.avion = new models.avion.Avion().getById(c, this.idAvion);
 		}
-		if(local) c.close();
+		if (local)
+			c.close();
 		return this.avion;
 	}
 
 	public Ville getVilleDepart(Connection c) throws SQLException {
 		boolean local = false;
-		if(c == null) {
+		if (c == null) {
 			c = database.Connect.getConnection();
 			local = true;
 		}
-		if(this.villeDepart == null) {
+		if (this.villeDepart == null) {
 			this.villeDepart = new Ville().getById(c, this.idVilleDepart);
 		}
-		if(local) c.close();
+		if (local)
+			c.close();
 		return this.villeDepart;
 	}
 
 	public Ville getVilleArrivee(Connection c) throws SQLException {
 		boolean local = false;
-		if(c == null) {
+		if (c == null) {
 			c = database.Connect.getConnection();
 			local = true;
 		}
-		if(this.villeArrivee == null) {
+		if (this.villeArrivee == null) {
 			this.villeArrivee = new Ville().getById(c, this.idVilleArrivee);
 		}
-		if(local) c.close();
+		if (local)
+			c.close();
 		return this.villeArrivee;
 	}
 }
