@@ -7,8 +7,8 @@ INSERT INTO Utilisateur (role, email, mdp) VALUES
 
 -- Insert data into Siege
 INSERT INTO Siege (nom) VALUES
-('Economique'),
-('Premium'),
+('ECO'),
+('BUSINESS'),
 ('VIP');
 
 -- Insert data into Avion
