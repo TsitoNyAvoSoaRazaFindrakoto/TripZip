@@ -76,3 +76,4 @@ CREATE TABLE Config_reservation (
 	duree TIME,
 	PRIMARY KEY (libelle)
 );
+

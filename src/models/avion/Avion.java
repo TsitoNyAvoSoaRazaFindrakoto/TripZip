@@ -1,6 +1,9 @@
 package models.avion;
 
 import java.time.LocalDate;
+
+import mg.itu.prom16.annotations.request.Exclude;
+
 import java.sql.Connection;
 
 public class Avion {
@@ -8,6 +11,7 @@ public class Avion {
 	private String modele;
 	private LocalDate fabrication;
 
+	@Exclude
 	private SiegesAvions[] sieges;
 
 	public Avion() {
