@@ -1,6 +1,7 @@
 package models.vol;
 
-public record DetailsPlace(int idVol, int idSiege, int places, int disponible, double prix, int siegesPromo,
+public record DetailsPlace(int idSiegeVol, int idVol, int idSiege, int places, int disponible, double prix,
+		int siegesPromo,
 		double prixPromo) {
 
 	public static java.util.List<DetailsPlace> getAll(int page, int size) {
@@ -13,6 +14,7 @@ public record DetailsPlace(int idVol, int idSiege, int places, int disponible, d
 			java.sql.ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				DetailsPlace dp = new DetailsPlace(
+						rs.getInt("Id_Siege_Vol"),
 						rs.getInt("id_vol"),
 						rs.getInt("id_siege"),
 						rs.getInt("places"),
@@ -37,6 +39,30 @@ public record DetailsPlace(int idVol, int idSiege, int places, int disponible, d
 			java.sql.ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				return new DetailsPlace(
+						rs.getInt("Id_Siege_Vol"),
+						rs.getInt("id_vol"),
+						rs.getInt("id_siege"),
+						rs.getInt("places"),
+						rs.getInt("disponible"),
+						rs.getDouble("prix"),
+						rs.getInt("sieges_promo"),
+						rs.getDouble("prix_promo"));
+			}
+		} catch (java.sql.SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static DetailsPlace getByIdSiegeVol(int idSiegeVol) {
+		String sql = "SELECT * FROM details_place WHERE Id_Siege_Vol = ?";
+		try (java.sql.Connection conn = database.Connect.getConnection();
+				java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1, idSiegeVol);
+			java.sql.ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				return new DetailsPlace(
+						rs.getInt("Id_Siege_Vol"),
 						rs.getInt("id_vol"),
 						rs.getInt("id_siege"),
 						rs.getInt("places"),

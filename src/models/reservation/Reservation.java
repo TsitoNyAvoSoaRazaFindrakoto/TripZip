@@ -5,6 +5,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import mg.itu.prom16.annotations.request.Exclude;
+import models.exception.InsufficientSeatsException;
+import models.exception.InvalidSeatQuantityException;
+import models.exception.ReservationDeadlineException;
+import models.exception.ReservationValidationException;
 import models.vol.DetailsPlace;
 import models.vol.SiegeVol;
 import models.vol.Vol;
@@ -21,7 +26,7 @@ public class Reservation {
 	private BigDecimal prix;
 	private int nombre;
 
-	// New relational object field for the foreign key
+	@Exclude
 	private SiegeVol siegeVol;
 
 	public Reservation() {
@@ -162,37 +167,48 @@ public class Reservation {
 		return this.siegeVol;
 	}
 
-	public Reservation validateReservation() {
-		try {
-			SiegeVol siegeVol = this.getSiegeVol(null);
-			if (siegeVol == null) {
-				return null; // SiegeVol not found
-			}
-
-			Vol vol = siegeVol.getVol(null);
-			if (vol == null) {
-				return null; // Vol not found
-			}
-
-			LocalDateTime reservationDeadline = vol.getReservation();
-			if (reservationDeadline == null || this.dateReservation.isAfter(reservationDeadline)) {
-				return null;
-			}
-
-			if (this.nombre <= 0) {
-				return null;
-			}
-
-			DetailsPlace details = DetailsPlace.getByIdVolAndIdSiege(vol.getIdVol(), siegeVol.getIdSiege());
-			if (details == null || this.nombre > details.disponible()) {
-				return null;
-			}
-
-			return this;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+	public Reservation validateReservation() throws ReservationValidationException, SQLException {
+		SiegeVol siegeVol = this.getSiegeVol(null);
+		if (siegeVol == null) {
+			throw new ReservationValidationException("Associated SiegeVol not found.");
 		}
+
+		Vol vol = siegeVol.getVol(null);
+		if (vol == null) {
+			throw new ReservationValidationException("Associated Vol not found.");
+		}
+
+		LocalDateTime reservationDeadline = vol.getReservation();
+		if (reservationDeadline == null || this.dateReservation.isAfter(reservationDeadline)) {
+			throw new ReservationDeadlineException("Reservation is past the deadline.");
+		}
+
+		if (this.nombre <= 0) {
+			throw new InvalidSeatQuantityException("Number of seats requested must be positive.");
+		}
+
+		DetailsPlace details = DetailsPlace.getByIdVolAndIdSiege(vol.getIdVol(), siegeVol.getIdSiege());
+		if (details == null) {
+			throw new ReservationValidationException("Seat details not found.");
+		}
+
+		if (this.nombre > details.disponible()) {
+			throw new InsufficientSeatsException("Not enough seats available.");
+		}
+
+		int discountedSeats = details.siegesPromo();
+		int normalSeats = this.nombre - discountedSeats;
+		if (discountedSeats > 0) {
+			Reservation discountedReservation = new Reservation();
+			discountedReservation.setIdSiegeVol(this.idSiegeVol);
+			discountedReservation.setContact(this.contact);
+			discountedReservation.setDateReservation(this.dateReservation);
+			discountedReservation.setNombre(discountedSeats);
+			discountedReservation.setPrix(BigDecimal.valueOf(details.prixPromo()));
+			this.nombre = normalSeats;
+			return discountedReservation;
+		}
+		return null;
 	}
 
 }

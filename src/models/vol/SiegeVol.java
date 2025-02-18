@@ -2,10 +2,11 @@ package models.vol;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import mg.itu.prom16.annotations.request.Exclude;
+
 import java.util.ArrayList;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import models.Siege;
@@ -18,7 +19,9 @@ public class SiegeVol {
 	private int idSiege;
 	private int idVol;
 
+	@Exclude
 	private Siege siege;
+	@Exclude
 	private Vol vol;
 
 	public SiegeVol() {

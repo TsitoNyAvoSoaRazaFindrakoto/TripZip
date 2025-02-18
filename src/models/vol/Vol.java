@@ -1,10 +1,11 @@
 package models.vol;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+
+import mg.itu.prom16.annotations.request.Exclude;
+import models.avion.Avion;
 
 public class Vol {
 	private int idVol, idAvion;
@@ -14,8 +15,11 @@ public class Vol {
 	private int idVilleDepart;
 	private int idVilleArrivee;
 
-	private models.avion.Avion avion;
+	@Exclude
+	private Avion avion;
+	@Exclude
 	private Ville villeDepart;
+	@Exclude
 	private Ville villeArrivee;
 
 	public Vol() {
@@ -230,14 +234,14 @@ public class Vol {
 		}
 	}
 
-	public models.avion.Avion getAvion(Connection c) throws SQLException {
+	public Avion getAvion(Connection c) throws SQLException {
 		boolean local = false;
 		if (c == null) {
 			c = database.Connect.getConnection();
 			local = true;
 		}
 		if (this.avion == null) {
-			this.avion = new models.avion.Avion().getById(c, this.idAvion);
+			this.avion = new Avion().getById(c, this.idAvion);
 		}
 		if (local)
 			c.close();
