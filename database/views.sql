@@ -1,29 +1,28 @@
-DROP VIEW IF EXISTS place_details;
-CREATE OR REPLACE VIEW place_details AS
+drop view if exists details_place cascade;
+CREATE VIEW details_place AS
 SELECT
-	v.Id_Vol,
-	s.Id_Siege,
-	(sa.nombre - COALESCE(SUM(pr.nombre), 0)) AS available_seats,
-	psv.montant AS normal_price,
+	V.Id_Vol,
+	SA.Id_Siege,
+	SA.nombre AS places,
+	(SA.nombre - COALESCE(SUM(R.nombre), 0)) AS disponible,
+	SV.montant AS prix,
 	CASE
-		WHEN (psv.siege_prom - COALESCE(SUM(pr.nombre), 0)) > 0 
-			THEN (psv.montant - (psv.montant * psv.prom / 100))
+		WHEN SV.siege_prom > COALESCE(SUM(R.nombre), 0) THEN SV.siege_prom - COALESCE(SUM(R.nombre), 0)
 		ELSE 0
-	END AS promotion_price,
-	CASE
-		WHEN (psv.siege_prom - COALESCE(SUM(pr.nombre), 0)) > 0 
-			THEN (psv.siege_prom - COALESCE(SUM(pr.nombre), 0))
-		ELSE 0
-	END AS promotion_seats
-FROM Prix_Siege_Vol psv
-JOIN Vol v ON v.Id_Vol = psv.Id_Vol
-JOIN Siege s ON s.Id_Siege = psv.Id_Siege
-JOIN Sieges_Avions sa ON sa.Id_Siege = s.Id_Siege
-LEFT JOIN Places_Reservation pr 
-	ON pr.Id_Siege = s.Id_Siege
-	AND pr.Id_Reservation IN (
-		SELECT Id_Reservation
-		FROM Reservation
-		WHERE Id_Vol = v.Id_Vol
-	)
-GROUP BY v.Id_Vol, s.Id_Siege, sa.nombre, psv.montant, psv.prom, psv.siege_prom;
+	END AS sieges_promo,
+	SV.montant * (1 - SV.prom) AS prix_promo
+FROM
+	Vol V
+	JOIN Sieges_Avions SA ON V.Id_Avion = SA.Id_Avion
+	JOIN Siege_Vol SV ON V.Id_Vol = SV.Id_Vol
+	AND SA.Id_Siege = SV.Id_Siege
+	LEFT JOIN Reservation R ON SV.Id_Siege_Vol = R.Id_Siege_Vol
+GROUP BY
+	V.Id_Vol,
+	SA.Id_Siege,
+	SA.nombre,
+	SV.montant,
+	SV.siege_prom,
+	SV.prom
+HAVING
+	(SA.nombre - COALESCE(SUM(R.nombre), 0)) > 0;

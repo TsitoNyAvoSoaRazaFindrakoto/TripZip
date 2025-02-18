@@ -24,4 +24,3 @@ CREATE TRIGGER vol_dates_before_update
 BEFORE UPDATE ON Vol
 FOR EACH ROW
 EXECUTE FUNCTION update_vol_dates();
-

@@ -10,7 +10,7 @@
     </servlet-mapping>
     <context-param>
         <param-name>controllerPackage</param-name>
-        <param-value>controlleurs</param-value>
+        <param-value>controllers</param-value>
     </context-param>
 		<context-param>
         <param-name>roleMapping</param-name>
