@@ -147,31 +147,6 @@ public class Vol {
 		return list;
 	}
 
-	public static int getCount(java.sql.Connection connection) {
-		int count = 0;
-		boolean nullConn = connection == null;
-		if (nullConn)
-			connection = database.Connect.getConnection();
-		try {
-			java.sql.PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) AS total FROM Vol");
-			java.sql.ResultSet result = statement.executeQuery();
-			if (result.next()) {
-				count = result.getInt("total");
-			}
-			statement.close();
-			if (nullConn)
-				connection.close();
-		} catch (Exception e) {
-			try {
-				connection.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-			e.printStackTrace();
-		}
-		return count;
-	}
-
 	public int getIdAvion() {
 		return idAvion;
 	}
