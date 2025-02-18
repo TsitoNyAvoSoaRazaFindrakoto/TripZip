@@ -4,12 +4,16 @@ import models.Siege;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import mg.itu.prom16.annotations.request.Exclude;
+
 public class SiegesAvions {
 	private int idSiege;
 	private int idAvion;
 	private int nombre;
 
+	@Exclude
 	private Siege siege;
+	@Exclude
 	private Avion avion;
 
 	public SiegesAvions() {
