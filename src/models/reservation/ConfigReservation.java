@@ -1,5 +1,6 @@
 package models.reservation;
 
+import java.sql.Time;
 import java.time.LocalTime;
 
 public class ConfigReservation {
@@ -63,7 +64,7 @@ public class ConfigReservation {
 			while (result.next()) {
 				ConfigReservation cr = new ConfigReservation();
 				cr.libelle = result.getString("libelle");
-				cr.duree = LocalTime.parse(result.getString("duree"));
+				cr.duree = result.getTime("duree").toLocalTime();
 				list.add(cr);
 			}
 			statement.close();
@@ -85,16 +86,19 @@ public class ConfigReservation {
 		if (nullConn)
 			connection = database.Connect.getConnection();
 		try {
+			connection.setAutoCommit(!nullConn);
 			java.sql.PreparedStatement statement = connection.prepareStatement(
-					"UPDATE Config_reservation SET duree = ? WHERE libelle = ?");
-			statement.setString(1, duree.toString());
+					"UPDATE config_reservation SET duree = ? WHERE libelle = ?");
+			statement.setTime(1, Time.valueOf(duree));
 			statement.setString(2, libelle);
 			statement.executeUpdate();
 			statement.close();
 			if (nullConn)
-				connection.close();
+				connection.commit();
+			connection.close();
 		} catch (Exception e) {
 			try {
+				connection.rollback();
 				connection.close();
 			} catch (Exception e2) {
 				e2.printStackTrace();
