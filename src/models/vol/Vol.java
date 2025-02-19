@@ -1,7 +1,10 @@
 package models.vol;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import mg.itu.prom16.annotations.request.Exclude;
@@ -155,31 +158,37 @@ public class Vol {
 		this.idAvion = idAvion;
 	}
 
-	public void save(java.sql.Connection connection) {
+	public void save(Connection connection) throws SQLException {
 		boolean nullConn = connection == null;
-		if (nullConn)
+		if (nullConn) {
 			connection = database.Connect.getConnection();
-		try {
-			String query = "INSERT INTO Vol (Id_Vol, date_vol, reservation, annulation, Id_Avion, Id_Ville_Depart, Id_Ville_Arrivee) VALUES (?, ?, ?, ?, ?, ?, ?)";
-			java.sql.PreparedStatement statement = connection.prepareStatement(query);
-			statement.setInt(1, this.idVol);
-			statement.setTimestamp(2, java.sql.Timestamp.valueOf(this.dateVol));
-			statement.setTimestamp(3, this.reservation != null ? java.sql.Timestamp.valueOf(this.reservation) : null);
-			statement.setTimestamp(4, this.annulation != null ? java.sql.Timestamp.valueOf(this.annulation) : null);
-			statement.setInt(5, this.idAvion);
-			statement.setInt(6, this.idVilleDepart);
-			statement.setInt(7, this.idVilleArrivee);
+		}
+
+		try (PreparedStatement statement = connection.prepareStatement(
+				"INSERT INTO Vol (Id_Vol, date_vol, reservation, annulation, Id_Avion, Id_Ville_Depart, Id_Ville_Arrivee) VALUES (default, ?, ?, ?, ?, ?, ?)",
+				PreparedStatement.RETURN_GENERATED_KEYS)) { // Important: Indicate that you want generated keys
+
+			statement.setTimestamp(1, Timestamp.valueOf(this.dateVol));
+			statement.setTimestamp(2, this.reservation != null ? Timestamp.valueOf(this.reservation) : null);
+			statement.setTimestamp(3, this.annulation != null ? Timestamp.valueOf(this.annulation) : null);
+			statement.setInt(4, this.idAvion);
+			statement.setInt(5, this.idVilleDepart);
+			statement.setInt(6, this.idVilleArrivee);
+
 			statement.executeUpdate();
-			statement.close();
-			if (nullConn)
-				connection.close();
-		} catch (Exception e) {
-			try {
-				connection.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
+
+			try (ResultSet generatedKeys = statement.getGeneratedKeys()) { // Get the generated keys
+				if (generatedKeys.next()) {
+					this.idVol = generatedKeys.getInt(1); // Set the new ID in the object
+				} else {
+					throw new SQLException("Could not retrieve generated key."); // Handle the case where no key is returned
+				}
 			}
-			e.printStackTrace();
+
+		} finally {
+			if (nullConn) {
+				connection.close();
+			}
 		}
 	}
 

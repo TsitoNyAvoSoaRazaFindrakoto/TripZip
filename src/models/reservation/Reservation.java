@@ -15,7 +15,10 @@ import models.vol.SiegeVol;
 import models.vol.Vol;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class Reservation {
 	@Exclude
@@ -193,11 +196,11 @@ public class Reservation {
 			throw new ReservationValidationException("Seat details not found.");
 		}
 
-		if (this.nombre > details.disponible()) {
+		if (this.nombre > details.getDisponible()) {
 			throw new InsufficientSeatsException("Not enough seats available.");
 		}
 
-		int discountedSeats = details.siegesPromo();
+		int discountedSeats = details.getSiegesPromo();
 		int normalSeats = this.nombre - discountedSeats;
 		if (discountedSeats > 0) {
 			Reservation discountedReservation = new Reservation();
@@ -205,11 +208,45 @@ public class Reservation {
 			discountedReservation.setContact(this.contact);
 			discountedReservation.setDateReservation(this.dateReservation);
 			discountedReservation.setNombre(discountedSeats);
-			discountedReservation.setPrix(BigDecimal.valueOf(details.prixPromo()));
+			discountedReservation.setPrix(BigDecimal.valueOf(details.getPrixPromo()));
 			this.nombre = normalSeats;
 			return discountedReservation;
 		}
 		return null;
+	}
+
+	public void save(Connection connection) throws SQLException {
+		boolean nullConn = connection == null;
+		if (nullConn) {
+			connection = database.Connect.getConnection();
+		}
+
+		try (PreparedStatement statement = connection.prepareStatement(
+				"INSERT INTO Reservation (Id_Siege_Vol, contact, date_reservation, prix, nombre, Id_Vol) VALUES (?, ?, ?, ?, ?, ?)",
+				PreparedStatement.RETURN_GENERATED_KEYS)) {
+
+			statement.setInt(1, this.idSiegeVol);
+			statement.setString(2, this.contact);
+			statement.setTimestamp(3, Timestamp.valueOf(this.dateReservation));
+			statement.setBigDecimal(4, this.prix);
+			statement.setInt(5, this.nombre);
+			statement.setInt(6, this.idVol);
+
+			statement.executeUpdate();
+
+			try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+				if (generatedKeys.next()) {
+					this.idReservation = generatedKeys.getInt(1);
+				} else {
+					throw new SQLException("Could not retrieve generated key.");
+				}
+			}
+
+		} finally {
+			if (nullConn) {
+				connection.close();
+			}
+		}
 	}
 
 }

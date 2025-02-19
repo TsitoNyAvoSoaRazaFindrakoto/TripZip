@@ -6,6 +6,6 @@
 	<title>Document</title>
 </head>
 <body>
-	<%=request.getAttribute("count")%>
+	
 </body>
 </html>
