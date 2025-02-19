@@ -5,12 +5,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import database.Connect;
+import mg.itu.prom16.annotations.request.Exclude;
 
 public class Utilisateur {
+	@Exclude
 	private int idUtilisateur;
 	private String email;
 	private String role;
 	private String mdp;
+
+	public Utilisateur() {
+	}
+
+	public Utilisateur(String email, String mdp) {
+		this.email = email;
+		this.mdp = mdp;
+	}
 
 	public int getIdUtilisateur() {
 		return idUtilisateur;

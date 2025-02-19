@@ -24,7 +24,7 @@ public class Reservation {
 	@Exclude
 	private int idReservation;
 	private int idSiegeVol;
-	private String contact;
+	private int idUtilisateur;
 	private LocalDateTime dateReservation;
 	private int idVol;
 	private BigDecimal prix;
@@ -44,14 +44,6 @@ public class Reservation {
 		this.idReservation = idReservation;
 	}
 
-	public String getContact() {
-		return contact;
-	}
-
-	public void setContact(String contact) {
-		this.contact = contact;
-	}
-
 	public LocalDateTime getDateReservation() {
 		return dateReservation;
 	}
@@ -68,69 +60,98 @@ public class Reservation {
 		this.idVol = idVol;
 	}
 
-	public Reservation getById(java.sql.Connection connection, int id) {
+	public Reservation getById(Connection connection, int id) throws SQLException {
 		boolean nullConn = connection == null;
-		if (nullConn)
+		if (nullConn) {
 			connection = database.Connect.getConnection();
-		try {
-			java.sql.PreparedStatement statement = connection
-					.prepareStatement("SELECT * FROM Reservation WHERE Id_Reservation = ?");
-			statement.setInt(1, id);
-			java.sql.ResultSet result = statement.executeQuery();
-			if (result.next()) {
-				// assuming fields: idReservation, contact, dateReservation, prix, nombre,
-				// Id_Siege_Vol
-				this.idReservation = result.getInt("Id_Reservation");
-				this.contact = result.getString("contact");
-				this.dateReservation = result.getTimestamp("date_reservation").toLocalDateTime();
-				this.prix = result.getBigDecimal("prix");
-				this.nombre = result.getInt("nombre");
-				this.idSiegeVol = result.getInt("Id_Siege_Vol");
-			}
-			statement.close();
-			if (nullConn)
-				connection.close();
-		} catch (Exception e) {
-			try {
-				connection.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-			e.printStackTrace();
 		}
-		return this;
+
+		try (PreparedStatement statement = connection
+				.prepareStatement("SELECT * FROM Reservation WHERE Id_Reservation = ?")) {
+			statement.setInt(1, id);
+			try (ResultSet result = statement.executeQuery()) {
+				if (result.next()) {
+					this.idReservation = result.getInt("Id_Reservation");
+					this.idUtilisateur = result.getInt("id_utilisateur"); // Get idUtilisateur from the database
+					this.dateReservation = result.getTimestamp("date_reservation").toLocalDateTime();
+					this.prix = result.getBigDecimal("prix");
+					this.nombre = result.getInt("nombre");
+					this.idSiegeVol = result.getInt("Id_Siege_Vol");
+					this.idVol = result.getInt("Id_Vol");
+					return this;
+				}
+			}
+		} finally {
+			if (nullConn) {
+				connection.close();
+			}
+		}
+		return null;
 	}
 
-	public static List<Reservation> getAll(java.sql.Connection connection) {
+	public static List<Reservation> getAll(Connection connection) throws SQLException {
 		List<Reservation> list = new ArrayList<>();
 		boolean nullConn = connection == null;
-		if (nullConn)
+		if (nullConn) {
 			connection = database.Connect.getConnection();
-		try {
-			java.sql.PreparedStatement statement = connection.prepareStatement("SELECT * FROM Reservation");
-			java.sql.ResultSet result = statement.executeQuery();
-			while (result.next()) {
-				Reservation r = new Reservation();
-				r.idReservation = result.getInt("Id_Reservation");
-				r.contact = result.getString("contact");
-				r.dateReservation = result.getTimestamp("date_reservation").toLocalDateTime();
-				r.prix = result.getBigDecimal("prix");
-				r.nombre = result.getInt("nombre");
-				r.idSiegeVol = result.getInt("Id_Siege_Vol");
-				list.add(r);
+		}
+
+		try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Reservation")) {
+			try (ResultSet result = statement.executeQuery()) {
+				while (result.next()) {
+					Reservation r = new Reservation();
+					r.idReservation = result.getInt("Id_Reservation");
+					r.idUtilisateur = result.getInt("id_utilisateur"); // Get idUtilisateur from the database
+					r.dateReservation = result.getTimestamp("date_reservation").toLocalDateTime();
+					r.prix = result.getBigDecimal("prix");
+					r.nombre = result.getInt("nombre");
+					r.idSiegeVol = result.getInt("Id_Siege_Vol");
+					r.idVol = result.getInt("Id_Vol");
+					list.add(r);
+				}
 			}
-			statement.close();
-			if (nullConn)
+		} finally {
+			if (nullConn) {
 				connection.close();
-		} catch (Exception e) {
-			try {
-				connection.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
 			}
-			e.printStackTrace();
 		}
 		return list;
+	}
+
+	// ... (Other methods: getPrix, setPrix, getNombre, setNombre, getIdSiegeVol,
+	// setIdSiegeVol, getSiegeVol, validateReservation)
+
+	public void save(Connection connection) throws SQLException {
+		boolean nullConn = connection == null;
+		if (nullConn) {
+			connection = database.Connect.getConnection();
+		}
+
+		try (PreparedStatement statement = connection.prepareStatement(
+				"INSERT INTO Reservation (Id_Siege_Vol, id_utilisateur, date_reservation, prix, nombre, Id_Vol) VALUES (?, ?, ?, ?, ?, ?)",
+				PreparedStatement.RETURN_GENERATED_KEYS)) {
+			statement.setInt(1, this.idSiegeVol);
+			statement.setInt(2, this.idUtilisateur); // Set idUtilisateur
+			statement.setTimestamp(3, Timestamp.valueOf(this.dateReservation));
+			statement.setBigDecimal(4, this.prix);
+			statement.setInt(5, this.nombre);
+			statement.setInt(6, this.idVol);
+
+			statement.executeUpdate();
+
+			try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+				if (generatedKeys.next()) {
+					this.idReservation = generatedKeys.getInt(1);
+				} else {
+					throw new SQLException("Could not retrieve generated key.");
+				}
+			}
+
+		} finally {
+			if (nullConn) {
+				connection.close();
+			}
+		}
 	}
 
 	public BigDecimal getPrix() {
@@ -205,7 +226,7 @@ public class Reservation {
 		if (discountedSeats > 0) {
 			Reservation discountedReservation = new Reservation();
 			discountedReservation.setIdSiegeVol(this.idSiegeVol);
-			discountedReservation.setContact(this.contact);
+			discountedReservation.setIdUtilisateur(this.idUtilisateur);
 			discountedReservation.setDateReservation(this.dateReservation);
 			discountedReservation.setNombre(discountedSeats);
 			discountedReservation.setPrix(BigDecimal.valueOf(details.getPrixPromo()));
@@ -215,38 +236,20 @@ public class Reservation {
 		return null;
 	}
 
-	public void save(Connection connection) throws SQLException {
-		boolean nullConn = connection == null;
-		if (nullConn) {
-			connection = database.Connect.getConnection();
-		}
+	public int getIdUtilisateur() {
+		return idUtilisateur;
+	}
 
-		try (PreparedStatement statement = connection.prepareStatement(
-				"INSERT INTO Reservation (Id_Siege_Vol, contact, date_reservation, prix, nombre, Id_Vol) VALUES (?, ?, ?, ?, ?, ?)",
-				PreparedStatement.RETURN_GENERATED_KEYS)) {
+	public void setIdUtilisateur(int idUtilisateur) {
+		this.idUtilisateur = idUtilisateur;
+	}
 
-			statement.setInt(1, this.idSiegeVol);
-			statement.setString(2, this.contact);
-			statement.setTimestamp(3, Timestamp.valueOf(this.dateReservation));
-			statement.setBigDecimal(4, this.prix);
-			statement.setInt(5, this.nombre);
-			statement.setInt(6, this.idVol);
+	public SiegeVol getSiegeVol() {
+		return siegeVol;
+	}
 
-			statement.executeUpdate();
-
-			try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-				if (generatedKeys.next()) {
-					this.idReservation = generatedKeys.getInt(1);
-				} else {
-					throw new SQLException("Could not retrieve generated key.");
-				}
-			}
-
-		} finally {
-			if (nullConn) {
-				connection.close();
-			}
-		}
+	public void setSiegeVol(SiegeVol siegeVol) {
+		this.siegeVol = siegeVol;
 	}
 
 }
