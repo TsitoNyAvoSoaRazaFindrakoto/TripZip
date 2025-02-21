@@ -1,1 +1,1 @@
-login
+<% response.sendRedirect("/TripZip/login"); %>
