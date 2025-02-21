@@ -4,10 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailsPlace {
+public class DetailsPlace extends Vol {
 
 	private int idSiegeVol;
 	private int idVol;
@@ -30,67 +31,78 @@ public class DetailsPlace {
 		this.prixPromo = prixPromo;
 	}
 
-	// Getters (indispensables pour accéder aux attributs)
+	public DetailsPlace(int idVol, int idAvion, LocalDateTime dateVol, LocalDateTime reservation,
+			LocalDateTime annulation, int idVilleDepart, int idVilleArrivee, int idSiegeVol, int idVol2,
+			int idSiege, int places, int disponible, double prix, int siegesPromo, double prixPromo) {
+		super(idVol, idAvion, dateVol, reservation, annulation, idVilleDepart, idVilleArrivee);
+		this.idSiegeVol = idSiegeVol;
+		idVol = idVol2;
+		this.idSiege = idSiege;
+		this.places = places;
+		this.disponible = disponible;
+		this.prix = prix;
+		this.siegesPromo = siegesPromo;
+		this.prixPromo = prixPromo;
+	}
+
 	public int getIdSiegeVol() {
 		return idSiegeVol;
+	}
+
+	public void setIdSiegeVol(int idSiegeVol) {
+		this.idSiegeVol = idSiegeVol;
 	}
 
 	public int getIdVol() {
 		return idVol;
 	}
 
-	public int getIdSiege() {
-		return idSiege;
-	}
-
-	public int getPlaces() {
-		return places;
-	}
-
-	public int getDisponible() {
-		return disponible;
-	}
-
-	public double getPrix() {
-		return prix;
-	}
-
-	public int getSiegesPromo() {
-		return siegesPromo;
-	}
-
-	public double getPrixPromo() {
-		return prixPromo;
-	}
-
-	// Setters (si vous avez besoin de modifier les attributs après la création de
-	// l'objet)
-	public void setIdSiegeVol(int idSiegeVol) {
-		this.idSiegeVol = idSiegeVol;
-	}
-
 	public void setIdVol(int idVol) {
 		this.idVol = idVol;
+	}
+
+	public int getIdSiege() {
+		return idSiege;
 	}
 
 	public void setIdSiege(int idSiege) {
 		this.idSiege = idSiege;
 	}
 
+	public int getPlaces() {
+		return places;
+	}
+
 	public void setPlaces(int places) {
 		this.places = places;
+	}
+
+	public int getDisponible() {
+		return disponible;
 	}
 
 	public void setDisponible(int disponible) {
 		this.disponible = disponible;
 	}
 
+	public double getPrix() {
+		return prix;
+	}
+
 	public void setPrix(double prix) {
 		this.prix = prix;
 	}
 
+	public int getSiegesPromo() {
+		return siegesPromo;
+	}
+
 	public void setSiegesPromo(int siegesPromo) {
 		this.siegesPromo = siegesPromo;
+	}
+
+	public double getPrixPromo() {
+		return prixPromo;
 	}
 
 	public void setPrixPromo(double prixPromo) {
@@ -99,49 +111,59 @@ public class DetailsPlace {
 
 	public static List<DetailsPlace> getAll(int page, int size) {
 		List<DetailsPlace> list = new ArrayList<>();
-		String sql = "SELECT * FROM details_place LIMIT ? OFFSET ?";
+		String sql = "SELECT * FROM details_place dp " +
+				"JOIN vol v ON dp.id_vol = v.Id_Vol " +
+				"JOIN ville vd ON v.Id_Ville_Depart = vd.Id_Ville " + // Join with Ville for depart
+				"LIMIT ? OFFSET ?";
+
 		try (Connection conn = database.Connect.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
 			pstmt.setInt(1, size);
 			pstmt.setInt(2, (page - 1) * size);
-			try (ResultSet rs = pstmt.executeQuery()) { // Try-with-resources pour ResultSet
+
+			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					list.add(createDetailsPlaceFromResultSet(rs));
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace(); // À remplacer par une gestion plus robuste des exceptions
+			e.printStackTrace(); // Replace with proper exception handling
 		}
 		return list;
 	}
 
 	public static DetailsPlace getByIdVolAndIdSiege(int idVol, int idSiege) {
-		String sql = "SELECT * FROM details_place WHERE id_vol = ? AND id_siege = ?";
+		String sql = "SELECT * FROM details_place where id_vol = ? and id_siege = ?";
 		return getDetailsPlace(sql, idVol, idSiege);
 	}
 
 	public static DetailsPlace getByIdSiegeVol(int idSiegeVol) {
-		String sql = "SELECT * FROM details_place WHERE Id_Siege_Vol = ?";
+		String sql = "SELECT * FROM details_place dp WHERE dp.Id_Siege_Vol = ?";
 		return getDetailsPlace(sql, idSiegeVol);
 	}
 
-	// Méthode utilitaire pour factoriser la création d'un DetailsPlace à partir
-	// d'un ResultSet
 	private static DetailsPlace createDetailsPlaceFromResultSet(ResultSet rs) throws SQLException {
-		return new DetailsPlace(
-				rs.getInt("Id_Siege_Vol"),
-				rs.getInt("id_vol"),
-				rs.getInt("id_siege"),
-				rs.getInt("places"),
-				rs.getInt("disponible"),
-				rs.getDouble("prix"),
-				rs.getInt("sieges_promo"),
-				rs.getDouble("prix_promo"));
+		int idVol = rs.getInt("v.Id_Vol"); // Example: Assuming "v" is the alias for the Vol table
+		int idAvion = rs.getInt("v.Id_Avion");
+		LocalDateTime dateVol = rs.getObject("v.dateVol", LocalDateTime.class); // Use getObject and specify the type
+		LocalDateTime reservation = rs.getObject("v.reservation", LocalDateTime.class);
+		LocalDateTime annulation = rs.getObject("v.annulation", LocalDateTime.class);
+		int idVilleDepart = rs.getInt("v.Id_Ville_Depart");
+		int idVilleArrivee = rs.getInt("v.Id_Ville_Arrivee");
+		int idSiegeVol = rs.getInt("sv.Id_Siege_Vol"); // Example alias "sv"
+		int idSiege = rs.getInt("s.Id_Siege"); // Example alias "s"
+		int places = rs.getInt("sv.places");
+		int disponible = rs.getInt("sv.disponible");
+		double prix = rs.getDouble("sv.prix");
+		int siegesPromo = rs.getInt("sv.siegesPromo");
+		double prixPromo = rs.getDouble("sv.prixPromo");
+
+		return new DetailsPlace(idVol, idAvion, dateVol, reservation, annulation, idVilleDepart, idVilleArrivee, idSiegeVol,
+				idVol, idSiege, places, disponible, prix, siegesPromo, prixPromo);
 	}
 
-	// Méthode utilitaire pour factoriser la logique de récupération d'un
-	// DetailsPlace
-	private static DetailsPlace getDetailsPlace(String sql, int... params) { // Varargs pour plus de flexibilité
+	private static DetailsPlace getDetailsPlace(String sql, int... params) {
 		try (Connection conn = database.Connect.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -155,7 +177,7 @@ public class DetailsPlace {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace(); // À remplacer par une gestion plus robuste
+			e.printStackTrace(); // Replace with proper exception handling
 		}
 		return null;
 	}
