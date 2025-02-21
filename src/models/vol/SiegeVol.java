@@ -217,4 +217,12 @@ public class SiegeVol {
 		}
 	}
 
+	public Vol getVol() {
+		return vol;
+	}
+
+	public void setVol(Vol vol) {
+		this.vol = vol;
+	}
+
 }

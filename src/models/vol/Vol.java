@@ -273,37 +273,48 @@ public class Vol {
 		return this.villeArrivee;
 	}
 
-
+	public void getVilles(Connection c) throws SQLException {
+		boolean local = false;
+		if (c == null) {
+			c = database.Connect.getConnection();
+			local = true;
+		}
+		getVilleArrivee(c);
+		getVilleDepart(c);
+		if (local)
+			c.close();
+	}
+	
+	public void getData(Connection c) throws SQLException {
+		boolean local = false;
+		if (c == null) {
+			c = database.Connect.getConnection();
+			local = true;
+		}
+		getVilles(c);
+		getAvion();
+		if (local) c.close();
+	}
 
 	public Avion getAvion() {
 		return avion;
 	}
 
-
-
 	public void setAvion(Avion avion) {
 		this.avion = avion;
 	}
-
-
 
 	public Ville getVilleDepart() {
 		return villeDepart;
 	}
 
-
-
 	public void setVilleDepart(Ville villeDepart) {
 		this.villeDepart = villeDepart;
 	}
 
-
-
 	public Ville getVilleArrivee() {
 		return villeArrivee;
 	}
-
-
 
 	public void setVilleArrivee(Ville villeArrivee) {
 		this.villeArrivee = villeArrivee;
