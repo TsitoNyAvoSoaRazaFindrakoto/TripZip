@@ -34,7 +34,7 @@ public class LoginController {
 	public ModelAndView toLogout(EmbedSession embedSession) {
 		embedSession.remove("utilisateur");
 		embedSession.remove("role");
-		return new ModelAndView("TripZip/login");
+		return new ModelAndView("/TripZip/login");
 	}
 
 }

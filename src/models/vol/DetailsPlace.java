@@ -8,10 +8,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.Connect;
+
 public class DetailsPlace extends Vol {
 
 	private int idSiegeVol;
-	private int idVol;
 	private int idSiege;
 	private int places;
 	private int disponible;
@@ -22,7 +23,7 @@ public class DetailsPlace extends Vol {
 	public DetailsPlace(int idSiegeVol, int idVol, int idSiege, int places, int disponible, double prix, int siegesPromo,
 			double prixPromo) {
 		this.idSiegeVol = idSiegeVol;
-		this.idVol = idVol;
+		setIdVol(idVol);
 		this.idSiege = idSiege;
 		this.places = places;
 		this.disponible = disponible;
@@ -32,11 +33,10 @@ public class DetailsPlace extends Vol {
 	}
 
 	public DetailsPlace(int idVol, int idAvion, LocalDateTime dateVol, LocalDateTime reservation,
-			LocalDateTime annulation, int idVilleDepart, int idVilleArrivee, int idSiegeVol, int idVol2,
+			LocalDateTime annulation, int idVilleDepart, int idVilleArrivee, int idSiegeVol,
 			int idSiege, int places, int disponible, double prix, int siegesPromo, double prixPromo) {
 		super(idVol, idAvion, dateVol, reservation, annulation, idVilleDepart, idVilleArrivee);
 		this.idSiegeVol = idSiegeVol;
-		idVol = idVol2;
 		this.idSiege = idSiege;
 		this.places = places;
 		this.disponible = disponible;
@@ -51,14 +51,6 @@ public class DetailsPlace extends Vol {
 
 	public void setIdSiegeVol(int idSiegeVol) {
 		this.idSiegeVol = idSiegeVol;
-	}
-
-	public int getIdVol() {
-		return idVol;
-	}
-
-	public void setIdVol(int idVol) {
-		this.idVol = idVol;
 	}
 
 	public int getIdSiege() {
@@ -109,14 +101,15 @@ public class DetailsPlace extends Vol {
 		this.prixPromo = prixPromo;
 	}
 
-	public static List<DetailsPlace> getAll(int page, int size) {
+	public static List<DetailsPlace> getAllDispo(Connection conn, int page, int size) throws Exception {
+		boolean inside = false;
+		if (conn == null) {
+			conn = Connect.getConnection();
+			inside = true;
+		}
 		List<DetailsPlace> list = new ArrayList<>();
-		String sql = "SELECT * FROM details_place dp " +
-				"JOIN vol v ON dp.id_vol = v.Id_Vol " +
-				"JOIN ville vd ON v.Id_Ville_Depart = vd.Id_Ville " + // Join with Ville for depart
-				"LIMIT ? OFFSET ?";
-
-		try (Connection conn = database.Connect.getConnection();
+		String sql = "SELECT * FROM details_place dp LIMIT ? OFFSET ?";
+		try (
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
 			pstmt.setInt(1, size);
@@ -128,14 +121,16 @@ public class DetailsPlace extends Vol {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace(); // Replace with proper exception handling
+			conn.close();
+			throw e;
 		}
+		if (inside) conn.close();
 		return list;
 	}
 
 	public static DetailsPlace getByIdVolAndIdSiege(int idVol, int idSiege) {
-		String sql = "SELECT * FROM details_place where id_vol = ? and id_siege = ?";
-		return getDetailsPlace(sql, idVol, idSiege);
+		String sql = "SELECT * FROM details_place where id_vol = ?";
+		return getDetailsPlace(sql, idVol);
 	}
 
 	public static DetailsPlace getByIdSiegeVol(int idSiegeVol) {
@@ -144,23 +139,23 @@ public class DetailsPlace extends Vol {
 	}
 
 	private static DetailsPlace createDetailsPlaceFromResultSet(ResultSet rs) throws SQLException {
-		int idVol = rs.getInt("v.Id_Vol"); // Example: Assuming "v" is the alias for the Vol table
-		int idAvion = rs.getInt("v.Id_Avion");
-		LocalDateTime dateVol = rs.getObject("v.dateVol", LocalDateTime.class); // Use getObject and specify the type
-		LocalDateTime reservation = rs.getObject("v.reservation", LocalDateTime.class);
-		LocalDateTime annulation = rs.getObject("v.annulation", LocalDateTime.class);
-		int idVilleDepart = rs.getInt("v.Id_Ville_Depart");
-		int idVilleArrivee = rs.getInt("v.Id_Ville_Arrivee");
-		int idSiegeVol = rs.getInt("sv.Id_Siege_Vol"); // Example alias "sv"
-		int idSiege = rs.getInt("s.Id_Siege"); // Example alias "s"
-		int places = rs.getInt("sv.places");
-		int disponible = rs.getInt("sv.disponible");
-		double prix = rs.getDouble("sv.prix");
-		int siegesPromo = rs.getInt("sv.siegesPromo");
-		double prixPromo = rs.getDouble("sv.prixPromo");
+		int idVol = rs.getInt("Id_Vol");
+		int idAvion = rs.getInt("Id_Avion");
+		LocalDateTime dateVol = rs.getObject("dateVol", LocalDateTime.class);
+		LocalDateTime reservation = rs.getObject("reservation", LocalDateTime.class);
+		LocalDateTime annulation = rs.getObject("annulation", LocalDateTime.class);
+		int idVilleDepart = rs.getInt("Id_Ville_Depart");
+		int idVilleArrivee = rs.getInt("Id_Ville_Arrivee");
+		int idSiegeVol = rs.getInt("Id_Siege_Vol");
+		int idSiege = rs.getInt("Id_Siege");
+		int places = rs.getInt("places");
+		int disponible = rs.getInt("disponible");
+		double prix = rs.getDouble("prix");
+		int siegesPromo = rs.getInt("siegesPromo");
+		double prixPromo = rs.getDouble("prixPromo");
 
 		return new DetailsPlace(idVol, idAvion, dateVol, reservation, annulation, idVilleDepart, idVilleArrivee, idSiegeVol,
-				idVol, idSiege, places, disponible, prix, siegesPromo, prixPromo);
+				idSiege, places, disponible, prix, siegesPromo, prixPromo);
 	}
 
 	private static DetailsPlace getDetailsPlace(String sql, int... params) {

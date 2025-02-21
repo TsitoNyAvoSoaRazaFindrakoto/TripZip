@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.Connect;
 import mg.itu.prom16.annotations.request.Exclude;
 import models.exception.InsufficientSeatsException;
 import models.exception.InvalidSeatQuantityException;
@@ -26,7 +27,6 @@ public class Reservation {
 	private int idSiegeVol;
 	private int idUtilisateur;
 	private LocalDateTime dateReservation;
-	private int idVol;
 	private BigDecimal prix;
 	private int nombre;
 
@@ -52,14 +52,6 @@ public class Reservation {
 		this.dateReservation = dateReservation;
 	}
 
-	public int getIdVol() {
-		return idVol;
-	}
-
-	public void setIdVol(int idVol) {
-		this.idVol = idVol;
-	}
-
 	public Reservation getById(Connection connection, int id) throws SQLException {
 		boolean nullConn = connection == null;
 		if (nullConn) {
@@ -77,7 +69,6 @@ public class Reservation {
 					this.prix = result.getBigDecimal("prix");
 					this.nombre = result.getInt("nombre");
 					this.idSiegeVol = result.getInt("Id_Siege_Vol");
-					this.idVol = result.getInt("Id_Vol");
 					return this;
 				}
 			}
@@ -106,7 +97,6 @@ public class Reservation {
 					r.prix = result.getBigDecimal("prix");
 					r.nombre = result.getInt("nombre");
 					r.idSiegeVol = result.getInt("Id_Siege_Vol");
-					r.idVol = result.getInt("Id_Vol");
 					list.add(r);
 				}
 			}
@@ -135,7 +125,6 @@ public class Reservation {
 			statement.setTimestamp(3, Timestamp.valueOf(this.dateReservation));
 			statement.setBigDecimal(4, this.prix);
 			statement.setInt(5, this.nombre);
-			statement.setInt(6, this.idVol);
 
 			statement.executeUpdate();
 
@@ -192,48 +181,44 @@ public class Reservation {
 		return this.siegeVol;
 	}
 
-	public Reservation validateReservation() throws ReservationValidationException, SQLException {
-		SiegeVol siegeVol = this.getSiegeVol(null);
-		if (siegeVol == null) {
-			throw new ReservationValidationException("Associated SiegeVol not found.");
-		}
+	public void validateReservation() throws ReservationValidationException, SQLException {
+		try (Connection c = Connect.getConnection()) {
+			SiegeVol siegeVol = this.getSiegeVol(c);
+			if (siegeVol == null) {
+				throw new ReservationValidationException("Associated SiegeVol not found.");
+			}
 
-		Vol vol = siegeVol.getVol(null);
-		if (vol == null) {
-			throw new ReservationValidationException("Associated Vol not found.");
-		}
+			Vol vol = siegeVol.getVol(c);
+			if (vol == null) {
+				throw new ReservationValidationException("Associated Vol not found.");
+			}
 
-		LocalDateTime reservationDeadline = vol.getReservation();
-		if (reservationDeadline == null || this.dateReservation.isAfter(reservationDeadline)) {
-			throw new ReservationDeadlineException("Reservation is past the deadline.");
-		}
+			LocalDateTime reservationDeadline = vol.getReservation();
+			if (reservationDeadline == null || this.dateReservation.isAfter(reservationDeadline)) {
+				throw new ReservationDeadlineException("Reservation is past the deadline.");
+			}
 
-		if (this.nombre <= 0) {
-			throw new InvalidSeatQuantityException("Number of seats requested must be positive.");
-		}
+			if (this.nombre <= 0) {
+				throw new InvalidSeatQuantityException("Number of seats requested must be positive.");
+			}
 
-		DetailsPlace details = DetailsPlace.getByIdVolAndIdSiege(vol.getIdVol(), siegeVol.getIdSiege());
-		if (details == null) {
-			throw new ReservationValidationException("Seat details not found.");
-		}
+			DetailsPlace details = DetailsPlace.getByIdVolAndIdSiege(vol.getIdVol(), siegeVol.getIdSiege());
+			if (details == null) {
+				throw new ReservationValidationException("Seat details not found.");
+			}
 
-		if (this.nombre > details.getDisponible()) {
-			throw new InsufficientSeatsException("Not enough seats available.");
-		}
+			if (this.nombre > details.getDisponible()) {
+				throw new InsufficientSeatsException("Not enough seats available.");
+			}
 
-		int discountedSeats = details.getSiegesPromo();
-		int normalSeats = this.nombre - discountedSeats;
-		if (discountedSeats > 0) {
-			Reservation discountedReservation = new Reservation();
-			discountedReservation.setIdSiegeVol(this.idSiegeVol);
-			discountedReservation.setIdUtilisateur(this.idUtilisateur);
-			discountedReservation.setDateReservation(this.dateReservation);
-			discountedReservation.setNombre(discountedSeats);
-			discountedReservation.setPrix(BigDecimal.valueOf(details.getPrixPromo()));
-			this.nombre = normalSeats;
-			return discountedReservation;
+			int discountedSeats = details.getSiegesPromo();
+			int normalSeats = this.nombre - discountedSeats;
+			setPrix(
+					BigDecimal.valueOf(
+							Math.round(discountedSeats * details.getPrixPromo() + normalSeats * details.getPrix() / this.nombre)));
+		} catch (Exception e) {
+			throw e;
 		}
-		return null;
 	}
 
 	public int getIdUtilisateur() {

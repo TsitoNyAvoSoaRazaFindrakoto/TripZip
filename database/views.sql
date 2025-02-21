@@ -3,13 +3,14 @@ drop view if exists details_place cascade;
 CREATE
 OR REPLACE VIEW details_place AS
 SELECT
+	SV.Id_Siege_Vol,
 	V.Id_Vol,
-	V.date_vol, -- Added date_vol
-	V.reservation, -- Added reservation
-	V.annulation, -- Added annulation
-	V.Id_Avion, -- Added Id_Avion
-	V.Id_Ville_Depart, -- Added Id_Ville_Depart
-	V.Id_Ville_Arrivee, -- Added Id_Ville_Arrivee
+	V.date_vol,
+	V.reservation,
+	V.annulation,
+	V.Id_Avion, 
+	V.Id_Ville_Depart, 
+	V.Id_Ville_Arrivee,
 	SA.Id_Siege,
 	SA.nombre AS places,
 	(SA.nombre - COALESCE(SUM(R.nombre), 0)) AS disponible,
@@ -27,16 +28,20 @@ FROM
 	LEFT JOIN Reservation R ON SV.Id_Siege_Vol = R.Id_Siege_Vol
 GROUP BY
 	V.Id_Vol,
-	V.date_vol, -- Added to GROUP BY
-	V.reservation, -- Added to GROUP BY
-	V.annulation, -- Added to GROUP BY
-	V.Id_Avion, -- Added to GROUP BY
-	V.Id_Ville_Depart, -- Added to GROUP BY
-	V.Id_Ville_Arrivee, -- Added to GROUP BY
+	V.date_vol,
+	V.reservation,
+	V.annulation,
+	V.Id_Avion,
+	V.Id_Ville_Depart,
+	V.Id_Ville_Arrivee,
 	SA.Id_Siege,
 	SA.nombre,
 	SV.montant,
 	SV.siege_prom,
-	SV.prom
+	SV.prom,
+	SV.Id_Siege_Vol
 HAVING
-	(SA.nombre - COALESCE(SUM(R.nombre), 0)) > 0;
+	(SA.nombre - COALESCE(SUM(R.nombre), 0)) > 0
+order by
+	v.id_vol,
+	sv.id_siege_vol;
