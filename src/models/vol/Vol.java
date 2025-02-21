@@ -30,6 +30,17 @@ public class Vol {
 	public Vol() {
 	}
 
+	public Vol(int idVol, int idAvion, LocalDateTime dateVol, LocalDateTime reservation, LocalDateTime annulation,
+			int idVilleDepart, int idVilleArrivee) {
+		this.idVol = idVol;
+		this.idAvion = idAvion;
+		this.dateVol = dateVol;
+		this.reservation = reservation;
+		this.annulation = annulation;
+		this.idVilleDepart = idVilleDepart;
+		this.idVilleArrivee = idVilleArrivee;
+	}
+
 	public int getIdVol() {
 		return idVol;
 	}
@@ -260,5 +271,41 @@ public class Vol {
 		if (local)
 			c.close();
 		return this.villeArrivee;
+	}
+
+
+
+	public Avion getAvion() {
+		return avion;
+	}
+
+
+
+	public void setAvion(Avion avion) {
+		this.avion = avion;
+	}
+
+
+
+	public Ville getVilleDepart() {
+		return villeDepart;
+	}
+
+
+
+	public void setVilleDepart(Ville villeDepart) {
+		this.villeDepart = villeDepart;
+	}
+
+
+
+	public Ville getVilleArrivee() {
+		return villeArrivee;
+	}
+
+
+
+	public void setVilleArrivee(Ville villeArrivee) {
+		this.villeArrivee = villeArrivee;
 	}
 }
