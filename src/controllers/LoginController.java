@@ -11,7 +11,7 @@ import models.Utilisateur;
 public class LoginController {
 	@RequestMapping(path = "/TripZip/login")
 	public ModelAndView toLogin() {
-		return new ModelAndView("index.jsp");
+		return new ModelAndView("views/login.jsp");
 	}
 
 	@RequestMapping(path = "/TripZip/login", method = "POST")
@@ -25,8 +25,16 @@ public class LoginController {
 		}
 		embedSession.add("utilisateur", u);
 		embedSession.add("role", u.getRole());
-		mv.setView(u.getRole() == "client" ? "frontend/index.jsp" : "backend/index.jsp");
+		mv.setRedirect(true);
+		mv.setView(u.getRole().equalsIgnoreCase("client") ? "/TripZip/front-office": "/TripZip/staff");
 		return mv;
+	}
+
+	@RequestMapping(path = "/TripZip/logout")
+	public ModelAndView toLogout(EmbedSession embedSession) {
+		embedSession.remove("utilisateur");
+		embedSession.remove("role");
+		return new ModelAndView("TripZip/login");
 	}
 
 }
