@@ -80,14 +80,17 @@ public class Reservation {
 		return null;
 	}
 
-	public static List<Reservation> getAll(Connection connection) throws SQLException {
+	public static List<Reservation> getByIdUtilisateur(Connection connection, int id_utilisateur)
+			throws SQLException {
 		List<Reservation> list = new ArrayList<>();
 		boolean nullConn = connection == null;
 		if (nullConn) {
 			connection = database.Connect.getConnection();
 		}
 
-		try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Reservation")) {
+		try (PreparedStatement statement = connection
+				.prepareStatement("SELECT * FROM Reservation WHERE id_utilisateur = ? order by date_reservation desc")) {
+			statement.setInt(1, id_utilisateur);
 			try (ResultSet result = statement.executeQuery()) {
 				while (result.next()) {
 					Reservation r = new Reservation();
@@ -108,9 +111,6 @@ public class Reservation {
 		return list;
 	}
 
-	// ... (Other methods: getPrix, setPrix, getNombre, setNombre, getIdSiegeVol,
-	// setIdSiegeVol, getSiegeVol, validateReservation)
-
 	public void save(Connection connection) throws SQLException {
 		boolean nullConn = connection == null;
 		if (nullConn) {
@@ -118,7 +118,7 @@ public class Reservation {
 		}
 
 		try (PreparedStatement statement = connection.prepareStatement(
-				"INSERT INTO Reservation (Id_Siege_Vol, id_utilisateur, date_reservation, prix, nombre, Id_Vol) VALUES (?, ?, ?, ?, ?, ?)",
+				"INSERT INTO Reservation (Id_Siege_Vol, id_utilisateur, date_reservation, prix, nombre) VALUES (?, ?, ?, ?, ?)",
 				PreparedStatement.RETURN_GENERATED_KEYS)) {
 			statement.setInt(1, this.idSiegeVol);
 			statement.setInt(2, this.idUtilisateur); // Set idUtilisateur
