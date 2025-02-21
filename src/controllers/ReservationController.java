@@ -10,17 +10,12 @@ import models.vol.Ville;
 
 @Controller
 public class ReservationController {
-	@RequestMapping(path = "/TripZip/front-office")
+	/* @RequestMapping(path = "/TripZip/")
 	public ModelAndView toList(@Param int page) {
-		ModelAndView mv = new ModelAndView("frontend/index.jsp");
+		ModelAndView mv = new ModelAndView("views/frontend/index.jsp");
 		mv.setAttribute("vols", DetailsPlace.getAll(1, 10));
 		mv.setAttribute("count", Connect.getCount(null, "details_place"));
 		mv.setAttribute("villes", Ville.getAll());
 		return mv;
-	}
-
-	@RequestMapping(path = "/TripZip/front-office")
-	public ModelAndView toReservtion() {
-		return new ModelAndView("frontend/reservation/form.jsp");
-	}
+	} */
 }
