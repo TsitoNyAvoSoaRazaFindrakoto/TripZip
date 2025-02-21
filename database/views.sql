@@ -1,7 +1,15 @@
 drop view if exists details_place cascade;
-CREATE VIEW details_place AS
+
+CREATE
+OR REPLACE VIEW details_place AS
 SELECT
 	V.Id_Vol,
+	V.date_vol, -- Added date_vol
+	V.reservation, -- Added reservation
+	V.annulation, -- Added annulation
+	V.Id_Avion, -- Added Id_Avion
+	V.Id_Ville_Depart, -- Added Id_Ville_Depart
+	V.Id_Ville_Arrivee, -- Added Id_Ville_Arrivee
 	SA.Id_Siege,
 	SA.nombre AS places,
 	(SA.nombre - COALESCE(SUM(R.nombre), 0)) AS disponible,
@@ -19,6 +27,12 @@ FROM
 	LEFT JOIN Reservation R ON SV.Id_Siege_Vol = R.Id_Siege_Vol
 GROUP BY
 	V.Id_Vol,
+	V.date_vol, -- Added to GROUP BY
+	V.reservation, -- Added to GROUP BY
+	V.annulation, -- Added to GROUP BY
+	V.Id_Avion, -- Added to GROUP BY
+	V.Id_Ville_Depart, -- Added to GROUP BY
+	V.Id_Ville_Arrivee, -- Added to GROUP BY
 	SA.Id_Siege,
 	SA.nombre,
 	SV.montant,
