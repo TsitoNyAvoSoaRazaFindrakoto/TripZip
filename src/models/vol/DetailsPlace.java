@@ -111,6 +111,7 @@ public class DetailsPlace extends Vol {
 			inside = true;
 		}
 		List<DetailsPlace> list = new ArrayList<>();
+		System.out.println("SELECT * FROM details_place LIMIT ? OFFSET ?");
 		String sql = "SELECT * FROM details_place LIMIT ? OFFSET ?";
 		try (
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
