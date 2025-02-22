@@ -39,8 +39,8 @@ public class ClientController {
 	 */
 	@RequestMapping(path = "/TripZip/client")
 	public ModelAndView toClient(EmbedSession embedSession) throws Exception {
-		ModelAndView mv = new ModelAndView(true, "views/frontend/index.jsp");
-		Utilisateur utilisateur = ((Utilisateur)embedSession.get("utilisateur"));
+		ModelAndView mv = new ModelAndView("views/frontend/index.jsp");
+		Utilisateur utilisateur = ((Utilisateur) embedSession.get("utilisateur"));
 		try (Connection c = Connect.getConnection()) {
 			List<Reservation> reservations = Reservation.getByIdUtilisateur(c, utilisateur.getIdUtilisateur());
 			reservations.stream().forEach(d -> {
@@ -50,7 +50,10 @@ public class ClientController {
 					d.getSiegeVol().getVol(c);
 					d.getSiegeVol().getVol().getData(c);
 				} catch (Exception e) {
-					mv.setAttribute("error", e.getMessage());
+					mv.setView("views/error.jsp");
+					mv.setAttribute("error", e);
+					System.out.println(e.getMessage());
+					return ;
 				}
 			});
 			mv.setAttribute("reservations", reservations);
