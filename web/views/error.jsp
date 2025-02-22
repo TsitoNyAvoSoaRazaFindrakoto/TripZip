@@ -11,6 +11,7 @@
             <h1 class="text-2xl font-bold text-gray-900">Error</h1>
         </div>
         <div class="mt-6 space-y-6">
+						
             <% Exception e = (Exception)request.getAttribute("error"); %>
             <div class=" border border-gray-200 rounded-md px-4 py-3">
                 <small class="text-gray-600 block"><%= e.getClass() %></small>
