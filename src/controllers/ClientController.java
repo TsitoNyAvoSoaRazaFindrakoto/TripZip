@@ -15,7 +15,7 @@ import models.reservation.Reservation;
 public class ClientController {
 	@RequestMapping(path = "/TripZip/client")
 	public ModelAndView toClient(EmbedSession embedSession) throws Exception {
-		ModelAndView mv = new ModelAndView("views/frontend/index.jsp");
+		ModelAndView mv = new ModelAndView("views/frontend/profil.jsp");
 		Utilisateur utilisateur = ((Utilisateur) embedSession.get("utilisateur"));
 		try (Connection c = Connect.getConnection()) {
 			List<Reservation> reservations = Reservation.getByIdUtilisateur(c, utilisateur.getIdUtilisateur());
