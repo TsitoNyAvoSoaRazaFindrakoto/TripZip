@@ -26,7 +26,7 @@ public class LoginController {
 		embedSession.add("utilisateur", u);
 		embedSession.add("role", u.getRole());
 		mv.setRedirect(true);
-		mv.setView(u.getRole().equalsIgnoreCase("client") ? "/TripZip/front-office": "/TripZip/staff");
+		mv.setView(u.getRole().equalsIgnoreCase("client") ? "/TripZip/client": "/TripZip/staff");
 		return mv;
 	}
 
