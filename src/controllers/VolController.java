@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.List;
 
 import database.Connect;
+import mg.itu.prom16.annotations.parameter.Param;
 import mg.itu.prom16.annotations.request.Controller;
 import mg.itu.prom16.annotations.request.RequestMapping;
 import mg.itu.prom16.embed.EmbedSession;
@@ -14,10 +15,10 @@ import models.vol.DetailsPlace;
 public class VolController {
 
 	@RequestMapping(path = "/TripZip/vols")
-	public ModelAndView toClient(EmbedSession embedSession) throws Exception {
+	public ModelAndView toClient(EmbedSession embedSession, @Param Integer page) throws Exception {
 		ModelAndView mv = new ModelAndView(true, "views/frontend/index.jsp");
 		try (Connection c = Connect.getConnection()) {
-			List<DetailsPlace> detailsPlace = DetailsPlace.getAllDispo(c, 1, 10);
+			List<DetailsPlace> detailsPlace = DetailsPlace.getAllDispo(c, page, 10);
 			detailsPlace.stream().forEach(d -> {
 				try {
 					d.getVilleArrivee(c);
