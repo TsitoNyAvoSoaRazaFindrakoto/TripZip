@@ -89,5 +89,3 @@ VALUES
 	(600.00, 0.00, 0, 1, 5), -- ECO, Sydney to Paris
 	(900.00, 0.00, 0, 2, 5), -- BUSINESS, Sydney to Paris
 	(1300.00, 0.00, 0, 3, 5);
-
--- VIP, Sydney to Paris
