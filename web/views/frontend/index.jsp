@@ -17,20 +17,20 @@
             <!-- Logo -->
             <div class="mr-6">
                 <span class="text-lg font-semibold">TripZip</span>
-            </div>
+                </div>
 
             <!-- Navigation -->
             <nav class="flex items-center space-x-6 text-sm font-medium">
                 <a href="/TripZip/vols" class="text-blue-600 hover:text-blue-800">Flights</a>
                 <a href="/TripZip/profil" class="text-gray-600 hover:text-gray-800">Reservations</a>
-            </nav>
+                </nav>
 
             <!-- Profile -->
             <div class="ml-auto flex items-center space-x-4">
-                <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2">
                     <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
                         <i class="fas fa-user text-blue-500 text-sm"></i>
-                    </div>
+                        </div>
                     <div>
                         <p class="text-sm font-medium">john.doe@example.com</p>
                     </div>
@@ -67,20 +67,20 @@
                             </p>
                         </div>
                         <i class="fas fa-plane text-blue-500"></i>
-                    </div>
+                </div>
 
                     <!-- Pricing -->
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
                             <span class="text-gray-600">Economy</span>
-                            <div class="flex items-center gap-2">
-                                <% if (vol.getSiegesPromo() > 0) { %>
-                                    <span class="text-sm line-through text-gray-400">$<%= vol.getPrix() %></span>
+                    <div class="flex items-center gap-2">
+                        <% if (vol.getSiegesPromo() > 0) { %>
+                            <span class="text-sm line-through text-gray-400">$<%= vol.getPrix() %></span>
                                     <span class="text-blue-600 font-medium">$<%= vol.getPrixPromo() %></span>
-                                <% } else { %>
+                        <% } else { %>
                                     <span class="text-blue-600 font-medium">$<%= vol.getPrix() %></span>
-                                <% } %>
-                            </div>
+                        <% } %>
+                    </div>
                         </div>
                         
                         <div class="flex justify-between items-center">
@@ -90,7 +90,7 @@
                     </div>
 
                     <!-- Action Button -->
-                    <a href="#" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg text-center hover:bg-blue-700 transition-colors">
+                    <a href="/TripZip/reservation" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg text-center hover:bg-blue-700 transition-colors">
                         Book Now
                     </a>
                 </div>
