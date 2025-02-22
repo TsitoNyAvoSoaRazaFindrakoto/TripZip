@@ -7,6 +7,7 @@ import java.util.List;
 
 import database.Connect;
 import mg.itu.prom16.annotations.request.Exclude;
+import mg.itu.prom16.annotations.validation.constraints.Min;
 import models.exception.InsufficientSeatsException;
 import models.exception.InvalidSeatQuantityException;
 import models.exception.ReservationDeadlineException;
@@ -26,8 +27,11 @@ public class Reservation {
 	private int idReservation;
 	private int idSiegeVol;
 	private int idUtilisateur;
-	private LocalDateTime dateReservation;
+	@Exclude
+	private LocalDateTime dateReservation = LocalDateTime.now();
+	@Exclude
 	private BigDecimal prix;
+	@Min(1)
 	private int nombre;
 
 	@Exclude
