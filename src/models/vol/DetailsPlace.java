@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import database.Connect;
+import models.Siege;
 
 public class DetailsPlace extends Vol {
 
@@ -19,6 +20,8 @@ public class DetailsPlace extends Vol {
 	private double prix;
 	private int siegesPromo;
 	private double prixPromo;
+
+	private Siege siege;
 
 	public DetailsPlace(int idSiegeVol, int idVol, int idSiege, int places, int disponible, double prix, int siegesPromo,
 			double prixPromo) {
@@ -101,19 +104,19 @@ public class DetailsPlace extends Vol {
 		this.prixPromo = prixPromo;
 	}
 
-	public static List<DetailsPlace> getAllDispo(Connection conn, int page, int size) throws Exception {
+	public static List<DetailsPlace> getAllDispo(Connection conn, Integer page, int size) throws Exception {
 		boolean inside = false;
 		if (conn == null) {
 			conn = Connect.getConnection();
 			inside = true;
 		}
 		List<DetailsPlace> list = new ArrayList<>();
-		String sql = "SELECT * FROM details_place dp LIMIT ? OFFSET ?";
+		String sql = "SELECT * FROM details_place LIMIT ? OFFSET ?";
 		try (
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
 			pstmt.setInt(1, size);
-			pstmt.setInt(2, (page - 1) * size);
+			pstmt.setInt(2, page == null ? 0 : (page - 1) * size);
 
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
@@ -124,16 +127,17 @@ public class DetailsPlace extends Vol {
 			conn.close();
 			throw e;
 		}
-		if (inside) conn.close();
+		if (inside)
+			conn.close();
 		return list;
 	}
 
-	public static DetailsPlace getByIdVolAndIdSiege(int idVol, int idSiege) {
+	public static DetailsPlace getByIdVolAndIdSiege(int idVol, int idSiege) throws SQLException {
 		String sql = "SELECT * FROM details_place where id_vol = ?";
 		return getDetailsPlace(sql, idVol);
 	}
 
-	public static DetailsPlace getByIdSiegeVol(int idSiegeVol) {
+	public static DetailsPlace getByIdSiegeVol(int idSiegeVol) throws SQLException {
 		String sql = "SELECT * FROM details_place dp WHERE dp.Id_Siege_Vol = ?";
 		return getDetailsPlace(sql, idSiegeVol);
 	}
@@ -141,7 +145,7 @@ public class DetailsPlace extends Vol {
 	private static DetailsPlace createDetailsPlaceFromResultSet(ResultSet rs) throws SQLException {
 		int idVol = rs.getInt("Id_Vol");
 		int idAvion = rs.getInt("Id_Avion");
-		LocalDateTime dateVol = rs.getObject("dateVol", LocalDateTime.class);
+		LocalDateTime dateVol = rs.getObject("date_vol", LocalDateTime.class);
 		LocalDateTime reservation = rs.getObject("reservation", LocalDateTime.class);
 		LocalDateTime annulation = rs.getObject("annulation", LocalDateTime.class);
 		int idVilleDepart = rs.getInt("Id_Ville_Depart");
@@ -151,14 +155,14 @@ public class DetailsPlace extends Vol {
 		int places = rs.getInt("places");
 		int disponible = rs.getInt("disponible");
 		double prix = rs.getDouble("prix");
-		int siegesPromo = rs.getInt("siegesPromo");
-		double prixPromo = rs.getDouble("prixPromo");
+		int siegesPromo = rs.getInt("sieges_Promo");
+		double prixPromo = rs.getDouble("prix_Promo");
 
 		return new DetailsPlace(idVol, idAvion, dateVol, reservation, annulation, idVilleDepart, idVilleArrivee, idSiegeVol,
 				idSiege, places, disponible, prix, siegesPromo, prixPromo);
 	}
 
-	private static DetailsPlace getDetailsPlace(String sql, int... params) {
+	private static DetailsPlace getDetailsPlace(String sql, int... params) throws SQLException {
 		try (Connection conn = database.Connect.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -172,8 +176,30 @@ public class DetailsPlace extends Vol {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace(); // Replace with proper exception handling
+			throw e;
 		}
 		return null;
+	}
+
+	public Siege getSiege(Connection c) throws SQLException {
+		boolean local = false;
+		if (c == null) {
+			c = database.Connect.getConnection();
+			local = true;
+		}
+		if (this.siege == null) {
+			this.siege = new models.Siege().getById(c, this.idSiege);
+		}
+		if (local)
+			c.close();
+		return this.siege;
+	}
+
+	public Siege getSiege() {
+		return siege;
+	}
+
+	public void setSiege(Siege siege) {
+		this.siege = siege;
 	}
 }
