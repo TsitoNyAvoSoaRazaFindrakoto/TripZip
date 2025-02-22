@@ -89,3 +89,21 @@ VALUES
 	(600.00, 0.00, 0, 1, 5), -- ECO, Sydney to Paris
 	(900.00, 0.00, 0, 2, 5), -- BUSINESS, Sydney to Paris
 	(1300.00, 0.00, 0, 3, 5);
+
+-- Create a new reservation for user 3 (client2@example.com)
+INSERT INTO
+	Reservation (
+		date_reservation,
+		prix,
+		nombre,
+		Id_Utilisateur,
+		Id_Siege_Vol
+	)
+VALUES
+	(
+		'2024-03-14 09:30:00', -- Reservation date
+		1368.00, -- Total price (2 seats with 5% discount)
+		2, -- Number of seats
+		3, -- User ID 3 (client2@example.com)
+		2 -- Siege_Vol ID 2 (BUSINESS class Paris-NY with promo
+	);
