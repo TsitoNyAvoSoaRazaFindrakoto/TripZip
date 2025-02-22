@@ -13,7 +13,7 @@ import models.reservation.Reservation;
 
 @Controller
 public class ClientController {
-	@RequestMapping(path = "/TripZip/client")
+	@RequestMapping(path = "/TripZip/profil")
 	public ModelAndView toClient(EmbedSession embedSession) throws Exception {
 		ModelAndView mv = new ModelAndView("views/frontend/profil.jsp");
 		Utilisateur utilisateur = ((Utilisateur) embedSession.get("utilisateur"));
