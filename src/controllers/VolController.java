@@ -16,14 +16,13 @@ public class VolController {
 
 	@RequestMapping(path = "/TripZip/vols")
 	public ModelAndView toClient(EmbedSession embedSession, @Param Integer page) throws Exception {
-		ModelAndView mv = new ModelAndView(true, "views/frontend/index.jsp");
+		ModelAndView mv = new ModelAndView("views/frontend/index.jsp");
 		try (Connection c = Connect.getConnection()) {
-			List<DetailsPlace> detailsPlace = DetailsPlace.getAllDispo(c, page, 10);
+			List<DetailsPlace> detailsPlace = DetailsPlace.getAllDispo(c, page, 8);
+			System.out.println("we have " + detailsPlace.size() + " detailsPlace");
 			detailsPlace.stream().forEach(d -> {
 				try {
-					d.getVilleArrivee(c);
-					d.getVilleDepart(c);
-					d.getAvion(c);
+					d.getData(c);
 				} catch (Exception e) {
 					mv.setView("views/error.jsp");
 					mv.setAttribute("error", e);
@@ -32,6 +31,7 @@ public class VolController {
 				}
 			});
 			mv.setAttribute("count", Connect.getCount(c, "details_place"));
+			mv.setAttribute("page", page == null ? 1 : page);
 			mv.setAttribute("vols", detailsPlace);
 		} catch (Exception e) {
 			throw e;
