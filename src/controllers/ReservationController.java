@@ -30,7 +30,7 @@ public class ReservationController {
 		} catch (ReservationValidationException e) {
 			mv.setAttribute("error", e.getMessage());
 			mv.setRedirect(false);
-			mv.setView("/TripZip/reservation");
+			mv.setView("/TripZip/reservation?idSiegeVol="+reservation.getIdSiegeVol());
 			return mv;
 		}
 		return mv;
