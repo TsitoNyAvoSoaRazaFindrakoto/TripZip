@@ -281,10 +281,9 @@ public class Vol {
 		}
 		getVilleArrivee(c);
 		getVilleDepart(c);
-		if (local)
-			c.close();
+		if (local) c.close();
 	}
-	
+
 	public void getData(Connection c) throws SQLException {
 		boolean local = false;
 		if (c == null) {
@@ -292,8 +291,9 @@ public class Vol {
 			local = true;
 		}
 		getVilles(c);
-		getAvion();
-		if (local) c.close();
+		getAvion(c);
+		if (local)
+			c.close();
 	}
 
 	public Avion getAvion() {
