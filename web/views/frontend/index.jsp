@@ -90,7 +90,7 @@
                     </div>
 
                     <!-- Action Button -->
-                    <a href="/TripZip/reservation" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg text-center hover:bg-blue-700 transition-colors">
+                    <a href="/TripZip/reservation?idSiegeVol=<%= vol.getIdSiegeVol() %>" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg text-center hover:bg-blue-700 transition-colors">
                         Book Now
                     </a>
                 </div>
