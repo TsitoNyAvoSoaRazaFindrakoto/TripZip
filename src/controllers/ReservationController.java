@@ -20,7 +20,7 @@ public class ReservationController {
 	@Fallback(method = "GET", verb = "/TripZip/reservation")
 	@RequestMapping(path = "/TripZip/reservation", method = "POST")
 	public ModelAndView saveReservation(@ParamObject Reservation reservation) throws Exception {
-		ModelAndView mv = new ModelAndView("/TripZip/client");
+		ModelAndView mv = new ModelAndView(true,"/TripZip/profile");
 		try (Connection c = Connect.getConnection()) {
 			reservation.validateReservation();
 			c.setAutoCommit(false);
@@ -29,23 +29,20 @@ public class ReservationController {
 			c.commit();
 		} catch (ReservationValidationException e) {
 			mv.setAttribute("error", e.getMessage());
+			mv.setRedirect(false);
 			mv.setView("/TripZip/reservation");
 			return mv;
-		} catch (Exception e) {
-			throw e;
 		}
 		return mv;
 	}
 
 	@RequestMapping(path = "/TripZip/reservation")
 	public ModelAndView toReservation(EmbedSession embedSession, @Param int idSiegeVol) throws Exception {
-		ModelAndView mv = new ModelAndView(true, "views/frontend/reservation.jsp");
+		ModelAndView mv = new ModelAndView("views/frontend/reservation.jsp");
 		DetailsPlace d = DetailsPlace.getByIdSiegeVol(idSiegeVol);
 		try (Connection c = Connect.getConnection()) {
 			d.getSiege(c);
-			d.getData(c);
-		} catch (Exception e) {
-			throw e;
+			d.getData(c);	
 		}
 		mv.setAttribute("vol", d);
 		return mv;
