@@ -17,10 +17,10 @@ import models.vol.DetailsPlace;
 @Controller
 public class ReservationController {
 
-	@Fallback(method = "GET", verb = "/TripZip/reservation")
+	@Fallback(method = "GET", verb = "/reservation")
 	@RequestMapping(path = "/TripZip/reservation", method = "POST")
 	public ModelAndView saveReservation(@ParamObject Reservation reservation) throws Exception {
-		ModelAndView mv = new ModelAndView(true,"/TripZip/profile");
+		ModelAndView mv = new ModelAndView("/profile");
 		try (Connection c = Connect.getConnection()) {
 			reservation.validateReservation();
 			c.setAutoCommit(false);
@@ -29,8 +29,7 @@ public class ReservationController {
 			c.commit();
 		} catch (ReservationValidationException e) {
 			mv.setAttribute("error", e.getMessage());
-			mv.setRedirect(false);
-			mv.setView("/TripZip/reservation?idSiegeVol="+reservation.getIdSiegeVol());
+			mv.setView("/reservation?idSiegeVol="+reservation.getIdSiegeVol());
 			return mv;
 		}
 		return mv;
@@ -47,5 +46,4 @@ public class ReservationController {
 		mv.setAttribute("vol", d);
 		return mv;
 	}
-
 }
