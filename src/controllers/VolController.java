@@ -10,6 +10,7 @@ import mg.itu.prom16.annotations.request.RequestMapping;
 import mg.itu.prom16.embed.EmbedSession;
 import mg.itu.prom16.types.returnType.ModelAndView;
 import models.vol.DetailsPlace;
+import models.vol.Ville;
 import models.vol.Vol;
 
 @Controller
@@ -48,6 +49,7 @@ public class VolController {
 			try (Connection c = Connect.getConnection()) {
 				Vol v = new Vol().getById(c, idVol);
 				mv.setAttribute("vol", v);
+				mv.setAttribute("villes", Ville.getAll(c));
 			}
 		}
 		return mv;
