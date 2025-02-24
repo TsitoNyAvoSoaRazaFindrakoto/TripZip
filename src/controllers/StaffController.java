@@ -8,6 +8,7 @@ import mg.itu.prom16.annotations.parameter.Param;
 import mg.itu.prom16.annotations.parameter.ParamObject;
 import mg.itu.prom16.annotations.request.Controller;
 import mg.itu.prom16.annotations.request.RequestMapping;
+import mg.itu.prom16.annotations.validation.Fallback;
 import mg.itu.prom16.types.returnType.ModelAndView;
 import models.avion.Avion;
 import models.reservation.ConfigReservation;
@@ -21,7 +22,7 @@ public class StaffController {
 	public ModelAndView toForm(@Param Integer idVol) throws Exception {
 		ModelAndView mv = new ModelAndView("/views/backend/vol/form.jsp");
 		try (Connection c = Connect.getConnection()) {
-			if (idVol != null) {
+			if (idVol != null && idVol > 0) {
 				Vol v = new Vol().getById(c, idVol);
 				v.getData(c);
 				mv.setAttribute("vol", v);
@@ -39,9 +40,15 @@ public class StaffController {
 		return new ModelAndView("/views/backend/detail.jsp");
 	}
 
+	@Fallback(method = "GET", verb = "/vols/form")
 	@RequestMapping(path = "/TripZip/vols", method = "POST")
-	public ModelAndView createVol(@ParamObject Vol vol) {
-		ModelAndView mv = new ModelAndView();
+	public ModelAndView createVol(@ParamObject Vol vol) throws Exception {
+		ModelAndView mv = new ModelAndView("/vols");
+		if (vol.getIdVol() == 0) {
+			vol.save(null);
+		} else {
+			vol.update(null);
+		}
 		return mv;
 	}
 
