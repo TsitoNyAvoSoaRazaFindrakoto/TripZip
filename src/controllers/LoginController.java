@@ -25,7 +25,7 @@ public class LoginController {
 		}
 		embedSession.add("utilisateur", u);
 		embedSession.add("role", u.getRole());
-		mv.setView(u.getRole().equalsIgnoreCase("client") ? "/profil": "/staff");
+		mv.setView(u.getRole().equalsIgnoreCase("client") ? "/profil": "/vols");
 		return mv;
 	}
 
