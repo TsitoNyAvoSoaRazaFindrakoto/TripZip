@@ -10,6 +10,6 @@ import mg.itu.prom16.types.returnType.ModelAndView;
 public class StaffController {
 	@RequestMapping(path = "/TripZip/staff")
 	public ModelAndView toAdmin() {
-		return new ModelAndView(true, "views/backend/index.jsp");
+		return new ModelAndView("views/backend/index.jsp");
 	}
 }
