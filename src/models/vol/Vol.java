@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import mg.itu.prom16.annotations.request.Exclude;
+import mg.itu.prom16.annotations.request.FieldAlternate;
 import models.avion.Avion;
 
 public class Vol {
@@ -16,7 +17,9 @@ public class Vol {
 	private LocalDateTime dateVol;
 	private LocalDateTime reservation;
 	private LocalDateTime annulation;
+	@FieldAlternate(name = "villeDepart")
 	private int idVilleDepart;
+	@FieldAlternate(name = "villeArrivee")
 	private int idVilleArrivee;
 
 	@Exclude
