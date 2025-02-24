@@ -25,7 +25,7 @@ public class ReservationController {
 			reservation.validateReservation();
 			c.setAutoCommit(false);
 			reservation.save(c);
-			mv.setAttribute("success", "Reservation effectuée avec succès");
+			mv.setAttribute("success", "Reservation effectuee avec succes");
 			c.commit();
 		} catch (ReservationValidationException e) {
 			mv.setAttribute("error", e.getMessage());
@@ -37,7 +37,7 @@ public class ReservationController {
 
 	@RequestMapping(path = "/TripZip/reservation")
 	public ModelAndView toReservation(EmbedSession embedSession, @Param int idSiegeVol) throws Exception {
-		ModelAndView mv = new ModelAndView("views/frontend/reservation.jsp");
+		ModelAndView mv = new ModelAndView("/views/frontend/reservation.jsp");
 		DetailsPlace d = DetailsPlace.getByIdSiegeVol(idSiegeVol);
 		try (Connection c = Connect.getConnection()) {
 			d.getSiege(c);
