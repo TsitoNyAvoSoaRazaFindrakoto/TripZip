@@ -183,9 +183,9 @@ public class SiegeVol {
 		}
 
 		String sql;
-		if (idSiegeVol == 0) { // Nouvelle entrée (id auto-généré)
+		if (idSiegeVol == 0) { // Nouvelle entree (id auto-genere)
 			sql = "INSERT INTO Siege_Vol (montant, prom, siege_prom, Id_Siege, Id_Vol) VALUES (?, ?, ?, ?, ?)";
-		} else { // Mise à jour
+		} else { // Mise a jour
 			sql = "UPDATE Siege_Vol SET montant = ?, prom = ?, siege_prom = ?, Id_Siege = ?, Id_Vol = ? WHERE Id_Siege_Vol = ?";
 		}
 
@@ -196,13 +196,13 @@ public class SiegeVol {
 			statement.setInt(4, idSiege);
 			statement.setInt(5, idVol);
 
-			if (idSiegeVol != 0) { // Pour la mise à jour
+			if (idSiegeVol != 0) { // Pour la mise a jour
 				statement.setInt(6, idSiegeVol);
 			}
 
 			statement.executeUpdate();
 
-			if (idSiegeVol == 0) { // Récupérer l'id auto-généré après l'insertion
+			if (idSiegeVol == 0) { // Recuperer l'id auto-genere apres l'insertion
 				try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
 					if (generatedKeys.next()) {
 						idSiegeVol = generatedKeys.getInt(1);
