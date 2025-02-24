@@ -176,7 +176,7 @@ public class Vol {
 
 		try (PreparedStatement statement = connection.prepareStatement(
 				"INSERT INTO Vol (Id_Vol, date_vol, reservation, annulation, Id_Avion, Id_Ville_Depart, Id_Ville_Arrivee) VALUES (default, ?, ?, ?, ?, ?, ?)",
-				PreparedStatement.RETURN_GENERATED_KEYS)) { // Important: Indicate that you want generated keys
+				PreparedStatement.RETURN_GENERATED_KEYS)) {
 
 			statement.setTimestamp(1, Timestamp.valueOf(this.dateVol));
 			statement.setTimestamp(2, this.reservation != null ? Timestamp.valueOf(this.reservation) : null);
