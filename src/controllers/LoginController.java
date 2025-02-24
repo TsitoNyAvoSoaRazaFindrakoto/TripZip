@@ -25,8 +25,7 @@ public class LoginController {
 		}
 		embedSession.add("utilisateur", u);
 		embedSession.add("role", u.getRole());
-		mv.setRedirect(true);
-		mv.setView(u.getRole().equalsIgnoreCase("client") ? "/TripZip/profil": "/TripZip/staff");
+		mv.setView(u.getRole().equalsIgnoreCase("client") ? "/profil": "/staff");
 		return mv;
 	}
 
@@ -34,7 +33,7 @@ public class LoginController {
 	public ModelAndView toLogout(EmbedSession embedSession) {
 		embedSession.remove("utilisateur");
 		embedSession.remove("role");
-		return new ModelAndView("/TripZip/login");
+		return new ModelAndView("/login");
 	}
 
 }
