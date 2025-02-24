@@ -11,12 +11,11 @@ import mg.itu.prom16.annotations.request.Exclude;
 import models.avion.Avion;
 
 public class Vol {
-	@Exclude
 	private int idVol;
 	private int idAvion;
 	private LocalDateTime dateVol;
-	private LocalDateTime reservation; // Nullable
-	private LocalDateTime annulation; // Nullable
+	private LocalDateTime reservation;
+	private LocalDateTime annulation;
 	private int idVilleDepart;
 	private int idVilleArrivee;
 
