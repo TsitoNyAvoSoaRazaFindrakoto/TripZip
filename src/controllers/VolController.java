@@ -9,6 +9,8 @@ import mg.itu.prom16.annotations.request.Controller;
 import mg.itu.prom16.annotations.request.RequestMapping;
 import mg.itu.prom16.embed.EmbedSession;
 import mg.itu.prom16.types.returnType.ModelAndView;
+import models.avion.Avion;
+import models.reservation.ConfigReservation;
 import models.vol.DetailsPlace;
 import models.vol.Ville;
 import models.vol.Vol;
@@ -43,14 +45,18 @@ public class VolController {
 	}
 
 	@RequestMapping(path = "/TripZip/vols/form")
-	public ModelAndView toForm(@Param Integer idVol) throws Exception{
+	public ModelAndView toForm(@Param Integer idVol) throws Exception {
 		ModelAndView mv = new ModelAndView("views/backend/vol/form.jsp");
-		if (idVol != null) {
-			try (Connection c = Connect.getConnection()) {
+		try (Connection c = Connect.getConnection()) {
+			if (idVol != null) {
 				Vol v = new Vol().getById(c, idVol);
+				v.getData(c);
 				mv.setAttribute("vol", v);
-				mv.setAttribute("villes", Ville.getAll(c));
+				mv.setView("views/backend/vol/formUpdate.jsp");
 			}
+			mv.setAttribute("villes", Ville.getAll(c));
+			mv.setAttribute("avions", Avion.getAll(c));
+			mv.setAttribute("config", ConfigReservation.getAll(c));
 		}
 		return mv;
 	}
