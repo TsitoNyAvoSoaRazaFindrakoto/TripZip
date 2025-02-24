@@ -30,6 +30,7 @@
         %>
 
         <form action="/TripZip/vols" method="POST" id="volForm" class="space-y-6">
+					<input type="hidden" name="idVol" value="<%=vol.getIdVol()%>">
             <!-- Date du Vol -->
             <div class="space-y-2">
                 <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
