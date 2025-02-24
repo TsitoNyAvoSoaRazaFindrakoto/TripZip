@@ -8,8 +8,6 @@ import mg.itu.prom16.types.returnType.ModelAndView;
 @Controller
 @Auth(role = "admin")
 public class StaffController {
-	@RequestMapping(path = "/TripZip/staff")
-	public ModelAndView toAdmin() {
-		return new ModelAndView("views/backend/index.jsp");
-	}
+
+	
 }

@@ -10,6 +10,7 @@ import mg.itu.prom16.annotations.request.RequestMapping;
 import mg.itu.prom16.embed.EmbedSession;
 import mg.itu.prom16.types.returnType.ModelAndView;
 import models.vol.DetailsPlace;
+import models.vol.Vol;
 
 @Controller
 public class VolController {
@@ -37,6 +38,29 @@ public class VolController {
 			throw e;
 		}
 
+		return mv;
+	}
+
+	@RequestMapping(path = "/TripZip/vols/form")
+	public ModelAndView toForm(@Param Integer idVol) throws Exception{
+		ModelAndView mv = new ModelAndView("views/backend/vol/form.jsp");
+		if (idVol != null) {
+			try (Connection c = Connect.getConnection()) {
+				Vol v = new Vol().getById(c, idVol);
+				mv.setAttribute("vol", v);
+			}
+		}
+		return mv;
+	}
+
+	@RequestMapping(path = "/TripZip/vols/detail")
+	public ModelAndView toDetail(@Param int idVol) {
+		return new ModelAndView("views/backend/detail.jsp");
+	}
+
+	@RequestMapping(path = "/TripZip/vols", method = "POST")
+	public ModelAndView createVol() {
+		ModelAndView mv = new ModelAndView();
 		return mv;
 	}
 }
