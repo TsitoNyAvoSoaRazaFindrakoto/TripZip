@@ -9,16 +9,20 @@ import java.time.LocalDateTime;
 
 import mg.itu.prom16.annotations.request.Exclude;
 import mg.itu.prom16.annotations.request.FieldAlternate;
+import mg.itu.prom16.annotations.validation.constraints.Required;
 import models.avion.Avion;
 
 public class Vol {
 	private int idVol;
 	private int idAvion;
+	@Required
 	private LocalDateTime dateVol;
 	private LocalDateTime reservation;
 	private LocalDateTime annulation;
+	@Required
 	@FieldAlternate(name = "villeDepart")
 	private int idVilleDepart;
+	@Required
 	@FieldAlternate(name = "villeArrivee")
 	private int idVilleArrivee;
 
