@@ -1,9 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="models.vol.Vol" %>
 <%@ page import="models.vol.Ville" %>
+<%@ page import="models.vol.SiegeVol" %>
 <%@ page import="models.avion.Avion" %>
 <%@ page import="models.avion.SiegesAvions" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -116,6 +119,13 @@
 				<%
 					if (avion != null) {
 						List<SiegesAvions> sieges = avion.getSieges();
+						List<SiegeVol> siegesVol = vol.getSieges();
+						// Create a map for quick lookup of SiegeVol by idSiege
+						Map<Integer, SiegeVol> siegeVolMap = new HashMap<>();
+						for (SiegeVol sv : siegesVol) {
+							siegeVolMap.put(sv.getIdSiege(), sv);
+						}
+						
 						if (sieges != null && !sieges.isEmpty()) {
 				%>
 				<div class="mt-6">
@@ -126,15 +136,32 @@
 								<tr class="bg-gray-200 text-gray-800">
 									<th class="border border-gray-300 px-3 py-2 text-left">Type de Siège</th>
 									<th class="border border-gray-300 px-3 py-2 text-left">Nombre</th>
+									<th class="border border-gray-300 px-3 py-2 text-left">Prix</th>
+									<th class="border border-gray-300 px-3 py-2 text-left">Promotion</th>
+									<th class="border border-gray-300 px-3 py-2 text-left">Actions</th>
 								</tr>
 							</thead>
 							<tbody class="text-gray-700">
 								<%
 									for (SiegesAvions siege : sieges) {
+										SiegeVol siegeVol = siegeVolMap.get(siege.getIdSiege());
 								%>
 								<tr class="bg-gray-50">
 									<td class="border border-gray-300 px-3 py-2"><%= siege.getSiege().getNom() %></td>
 									<td class="border border-gray-300 px-3 py-2"><%= siege.getNombre() %></td>
+									<td class="border border-gray-300 px-3 py-2">
+										<%= siegeVol != null && siegeVol.getMontant().doubleValue() > 0 ? siegeVol.getMontant() + " Ar" : "Non défini" %>
+									</td>
+									<td class="border border-gray-300 px-3 py-2">
+										<%= siegeVol != null && siegeVol.getProm().doubleValue() > 0 ? siegeVol.getProm() + " %" : "Aucune" %>
+									</td>
+									<td class="border border-gray-300 px-3 py-2">
+										<a href="/TripZip/vols/sieges/edit?idSiegeVol=<%=siegeVol.getIdSiegeVol()%>" 
+											class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2">
+											<i class="fas fa-edit mr-2"></i>
+											Modifier
+										</a>
+									</td>
 								</tr>
 								<%
 									}

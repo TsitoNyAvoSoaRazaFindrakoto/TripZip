@@ -15,12 +15,14 @@ import models.Siege;
 
 public class SiegeVol {
 	private int idSiegeVol;
-	private BigDecimal montant ;
+	private BigDecimal montant = BigDecimal.ZERO;
 	private BigDecimal prom = BigDecimal.ZERO;
 	private int siegeProm;
 	private int idSiege;
 	private int idVol;
 
+
+	
 	@Exclude
 	private Siege siege;
 	@Exclude
@@ -77,7 +79,7 @@ public class SiegeVol {
 		this.idVol = idVol;
 	}
 
-	public Siege getSiege(Connection c) throws SQLException {
+	public Siege getSiege(Connection c) throws Exception {
 		boolean local = false;
 		if (c == null) {
 			c = database.Connect.getConnection();
@@ -99,7 +101,7 @@ public class SiegeVol {
 		this.siege = siege;
 	}
 
-	public Vol getVol(Connection c) throws SQLException {
+	public Vol getVol(Connection c) throws Exception {
 		boolean local = false;
 		if (c == null) {
 			c = database.Connect.getConnection();
@@ -119,7 +121,7 @@ public class SiegeVol {
 			connection = database.Connect.getConnection();
 		try {
 			java.sql.PreparedStatement statement = connection
-					.prepareStatement("SELECT * FROM Siege_Vol WHERE Id_Siege_Vol = ?");
+					.prepareStatement("SELECT * FROM Siege_Vol WHERE Id_Siege_Vol = ? order by id_siege asc");
 			statement.setInt(1, id);
 			java.sql.ResultSet result = statement.executeQuery();
 			if (result.next()) {
@@ -151,7 +153,7 @@ public class SiegeVol {
 			connection = database.Connect.getConnection();
 		try {
 			java.sql.PreparedStatement statement = connection
-					.prepareStatement("SELECT * FROM Siege_Vol WHERE id_vol = ?");
+					.prepareStatement("SELECT * FROM Siege_Vol WHERE id_vol = ? order by id_siege asc");
 			statement.setInt(1, idVol);
 			java.sql.ResultSet result = statement.executeQuery();
 			while (result.next()) {
@@ -211,7 +213,7 @@ public class SiegeVol {
 		return list;
 	}
 
-	public void save(Connection connection) throws SQLException {
+	public void saveOrUpdate(Connection connection) throws SQLException {
 		boolean nullConn = connection == null;
 		if (nullConn) {
 			connection = database.Connect.getConnection();
@@ -259,5 +261,4 @@ public class SiegeVol {
 	public void setVol(Vol vol) {
 		this.vol = vol;
 	}
-
 }
