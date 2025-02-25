@@ -30,6 +30,7 @@ CREATE TABLE Vol (
 	date_vol TIMESTAMP NOT NULL,
 	reservation TIMESTAMP,
 	annulation TIMESTAMP,
+	etat BOOLEAN default false,
 	Id_Avion INTEGER NOT NULL,
 	Id_Ville_Depart INTEGER NOT NULL,
 	Id_Ville_Arrivee INTEGER NOT NULL,
