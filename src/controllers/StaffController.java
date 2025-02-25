@@ -49,7 +49,7 @@ public class StaffController {
 		return mv;
 	}
 
-	@Fallback(method = "GET", verb = "/vols/form")
+	@Fallback(method = "GET", verb = "/vols/form", parameters = { "idVol" })
 	@RequestMapping(path = "/TripZip/vols", method = "POST")
 	public ModelAndView createVol(@ParamObject Vol vol) throws Exception {
 		ModelAndView mv = new ModelAndView();
@@ -73,11 +73,11 @@ public class StaffController {
 	}
 
 	@RequestMapping(path = "/TripZip/vols/sieges/edit")
-	public ModelAndView modifySiegeVolDet(@Param Integer id) throws Exception {
+	public ModelAndView modifySiegeVolDet(@Param Integer idSiegeVol) throws Exception {
 		ModelAndView mv = new ModelAndView("/views/backend/siegeVol/edit.jsp");
 		try (Connection c = Connect.getConnection()) {
-			if (id != null) {
-				SiegeVol siegeVol = new SiegeVol().getById(c, id);
+			if (idSiegeVol != null) {
+				SiegeVol siegeVol = new SiegeVol().getById(c, idSiegeVol);
 				mv.setAttribute("siegeVol", siegeVol);
 				mv.setAttribute("sieges", Siege.getAll(c));
 			}
@@ -85,7 +85,7 @@ public class StaffController {
 		return mv;
 	}
 
-	@Fallback(method = "GET", verb = "/vols/sieges/edit")
+	@Fallback(method = "GET", verb = "/vols/sieges/edit", parameters = { "idSiegeVol" })
 	@RequestMapping(path = "/TripZip/vols/sieges/edit", method = "POST")
 	public ModelAndView updateSiegeVol(@ParamObject SiegeVol siegeVol) throws Exception {
 		ModelAndView mv = new ModelAndView();

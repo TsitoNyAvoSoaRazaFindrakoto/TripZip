@@ -104,7 +104,7 @@ public class Vol {
 		this.idVilleArrivee = idVille1;
 	}
 
-	public Vol getById(java.sql.Connection connection, int id) {
+	public Vol getById(java.sql.Connection connection, int id) throws Exception{
 		boolean nullConn = connection == null;
 		if (nullConn)
 			connection = database.Connect.getConnection();
@@ -129,12 +129,9 @@ public class Vol {
 			if (nullConn)
 				connection.close();
 		} catch (Exception e) {
-			try {
 				connection.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-			e.printStackTrace();
+				throw e;
+			
 		}
 		return this;
 	}

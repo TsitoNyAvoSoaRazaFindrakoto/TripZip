@@ -77,7 +77,7 @@ public class SiegeVol {
 		this.idVol = idVol;
 	}
 
-	public Siege getSiege(Connection c) throws SQLException {
+	public Siege getSiege(Connection c) throws Exception {
 		boolean local = false;
 		if (c == null) {
 			c = database.Connect.getConnection();
@@ -99,7 +99,7 @@ public class SiegeVol {
 		this.siege = siege;
 	}
 
-	public Vol getVol(Connection c) throws SQLException {
+	public Vol getVol(Connection c) throws Exception {
 		boolean local = false;
 		if (c == null) {
 			c = database.Connect.getConnection();
