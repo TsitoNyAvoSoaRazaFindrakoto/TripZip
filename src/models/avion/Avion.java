@@ -1,6 +1,7 @@
 package models.avion;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import mg.itu.prom16.annotations.request.Exclude;
 
@@ -12,7 +13,7 @@ public class Avion {
 	private LocalDate fabrication;
 
 	@Exclude
-	private SiegesAvions[] sieges;
+	private List<SiegesAvions> sieges;
 
 	public Avion() {
 	}
@@ -45,14 +46,6 @@ public class Avion {
 
 	public void setFabrication(LocalDate fabrication) {
 		this.fabrication = fabrication;
-	}
-
-	public SiegesAvions[] getSieges() {
-		return sieges;
-	}
-
-	public void setSieges(SiegesAvions[] sieges) {
-		this.sieges = sieges;
 	}
 
 	public Avion getById(Connection connection, int id) {
@@ -111,13 +104,13 @@ public class Avion {
 	}
 
 	// getSieges(Connection c,int idAvion)
-	public SiegesAvions[] getSieges(Connection connection) {
+	public List<SiegesAvions> getSieges(Connection connection) {
 		boolean nullConn = connection == null;
 		if (nullConn) {
 			connection = database.Connect.getConnection();
 		}
 		if (this.sieges == null) {
-			this.sieges = SiegesAvions.getByIdAvion(connection, this.idAvion).toArray(new SiegesAvions[0]);
+			this.sieges = SiegesAvions.getByIdAvion(connection, this.idAvion);
 		}
 		if (nullConn) {
 			try {
@@ -127,5 +120,13 @@ public class Avion {
 			}
 		}
 		return this.sieges;
+	}
+
+	public List<SiegesAvions> getSieges() {
+		return sieges;
+	}
+
+	public void setSieges(List<SiegesAvions> sieges) {
+		this.sieges = sieges;
 	}
 }

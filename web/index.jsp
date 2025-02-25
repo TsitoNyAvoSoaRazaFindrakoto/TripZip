@@ -1,3 +1,1 @@
-<%
-	response.sendRedirect("localhost:8080/TripZip/front-office");
-%>
+<% response.sendRedirect("/TripZip/login"); %>

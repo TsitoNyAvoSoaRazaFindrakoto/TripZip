@@ -30,6 +30,7 @@ CREATE TABLE Vol (
 	date_vol TIMESTAMP NOT NULL,
 	reservation TIMESTAMP,
 	annulation TIMESTAMP,
+	etat BOOLEAN default false,
 	Id_Avion INTEGER NOT NULL,
 	Id_Ville_Depart INTEGER NOT NULL,
 	Id_Ville_Arrivee INTEGER NOT NULL,
@@ -62,12 +63,13 @@ CREATE TABLE Sieges_Avions (
 
 CREATE TABLE Reservation (
 	Id_Reservation SERIAL,
-	contact VARCHAR(50) NOT NULL,
 	date_reservation TIMESTAMP NOT NULL,
 	prix NUMERIC(17, 2) NOT NULL,
 	nombre INTEGER NOT NULL,
+	Id_Utilisateur INTEGER NOT NULL,
 	Id_Siege_Vol INTEGER NOT NULL,
 	PRIMARY KEY (Id_Reservation),
+	FOREIGN KEY (Id_Utilisateur) REFERENCES Utilisateur (Id_Utilisateur),
 	FOREIGN KEY (Id_Siege_Vol) REFERENCES Siege_Vol (Id_Siege_Vol)
 );
 
@@ -76,4 +78,3 @@ CREATE TABLE Config_reservation (
 	duree TIME,
 	PRIMARY KEY (libelle)
 );
-

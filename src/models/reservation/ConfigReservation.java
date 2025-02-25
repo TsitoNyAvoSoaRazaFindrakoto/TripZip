@@ -81,29 +81,33 @@ public class ConfigReservation {
 		return list;
 	}
 
-	public void update(java.sql.Connection connection) {
+	public void update(java.sql.Connection connection) throws Exception {
 		boolean nullConn = connection == null;
+		System.out.println(toString());
 		if (nullConn)
 			connection = database.Connect.getConnection();
 		try {
 			connection.setAutoCommit(!nullConn);
-			java.sql.PreparedStatement statement = connection.prepareStatement(
-					"UPDATE config_reservation SET duree = ? WHERE libelle = ?");
+			java.sql.PreparedStatement statement = connection
+					.prepareStatement("update config_reservation set duree=? where libelle=?");
 			statement.setTime(1, Time.valueOf(duree));
 			statement.setString(2, libelle);
 			statement.executeUpdate();
 			statement.close();
-			if (nullConn)
-				connection.commit();
-			connection.close();
-		} catch (Exception e) {
-			try {
-				connection.rollback();
+			if (nullConn) {
 				connection.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
 			}
-			e.printStackTrace();
+		} catch (Exception e) {
+			if (nullConn) {
+				connection.close();
+			}
+			throw e;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "ConfigReservation [libelle=" + libelle + "datetime, duree=" + duree.toString() + "] and in time "
+				+ Time.valueOf(duree);
 	}
 }
