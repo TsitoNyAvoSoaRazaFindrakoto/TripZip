@@ -76,7 +76,7 @@
                     <div class="flex items-center gap-2">
                         <% if (vol.getSiegesPromo() > 0) { %>
                             <span class="text-sm line-through text-gray-400">$<%= vol.getPrix() %></span>
-                                    <span class="text-blue-600 font-medium">$<%= vol.getPrixPromo() %></span>
+                            <span class="text-blue-600 font-medium">$<%= vol.getPrixPromo() %></span>
                         <% } else { %>
                                     <span class="text-blue-600 font-medium">$<%= vol.getPrix() %></span>
                         <% } %>

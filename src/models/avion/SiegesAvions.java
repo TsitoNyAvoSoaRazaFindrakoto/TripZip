@@ -87,7 +87,7 @@ public class SiegesAvions {
 			connection = database.Connect.getConnection();
 		try {
 			java.sql.PreparedStatement statement = connection
-					.prepareStatement("SELECT * FROM Sieges_Avions WHERE Id_Siege = ? and Id_Avion = ?");
+					.prepareStatement("SELECT * FROM Sieges_Avions WHERE Id_Siege = ? and Id_Avion = ? order by id_siege asc");
 			statement.setInt(1, Id_Siege);
 			statement.setInt(2, Id_Avion);
 			java.sql.ResultSet result = statement.executeQuery();
@@ -119,7 +119,7 @@ public class SiegesAvions {
 			connection = database.Connect.getConnection();
 		try {
 			java.sql.PreparedStatement statement = connection
-					.prepareStatement("SELECT * FROM Sieges_Avions WHERE Id_Avion = ?");
+					.prepareStatement("SELECT * FROM Sieges_Avions WHERE Id_Avion = ? order by id_siege asc");
 			statement.setInt(1, Id_Avion);
 			java.sql.ResultSet result = statement.executeQuery();
 			while (result.next()) {
@@ -151,7 +151,7 @@ public class SiegesAvions {
 		if (nullConn)
 			connection = database.Connect.getConnection();
 		try {
-			java.sql.PreparedStatement statement = connection.prepareStatement("SELECT * FROM Sieges_Avions");
+			java.sql.PreparedStatement statement = connection.prepareStatement("SELECT * FROM Sieges_Avions order by id_siege asc");
 			java.sql.ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				SiegesAvions sa = new SiegesAvions();
