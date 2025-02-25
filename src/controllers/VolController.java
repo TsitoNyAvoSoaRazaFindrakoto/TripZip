@@ -5,16 +5,11 @@ import java.util.List;
 
 import database.Connect;
 import mg.itu.prom16.annotations.parameter.Param;
-import mg.itu.prom16.annotations.parameter.ParamObject;
 import mg.itu.prom16.annotations.request.Controller;
 import mg.itu.prom16.annotations.request.RequestMapping;
 import mg.itu.prom16.embed.EmbedSession;
 import mg.itu.prom16.types.returnType.ModelAndView;
-import models.avion.Avion;
-import models.reservation.ConfigReservation;
 import models.vol.DetailsPlace;
-import models.vol.Ville;
-import models.vol.Vol;
 
 @Controller
 public class VolController {
@@ -23,7 +18,7 @@ public class VolController {
 	public ModelAndView toClient(EmbedSession embedSession, @Param Integer page) throws Exception {
 		ModelAndView mv = new ModelAndView("/views/frontend/index.jsp");
 		try (Connection c = Connect.getConnection()) {
-			List<DetailsPlace> detailsPlace = DetailsPlace.getAllDispo(c, page, 8);
+			List<DetailsPlace> detailsPlace = DetailsPlace.getAllDispo(c, page, 8,false);
 			detailsPlace.stream().forEach(d -> {
 				try {
 					d.getData(c);

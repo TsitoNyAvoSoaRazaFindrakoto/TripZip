@@ -206,7 +206,7 @@ public class Reservation {
 				throw new InvalidSeatQuantityException("Number of seats requested must be positive.");
 			}
 
-			DetailsPlace details = DetailsPlace.getByIdVolAndIdSiege(vol.getIdVol(), siegeVol.getIdSiege());
+			DetailsPlace details = DetailsPlace.getByIdVolAndIdSiege(vol.getIdVol(), siegeVol.getIdSiege(),true);
 			if (details == null) {
 				throw new ReservationValidationException("Seat details not found.");
 			}

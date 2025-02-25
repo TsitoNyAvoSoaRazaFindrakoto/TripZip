@@ -38,7 +38,7 @@ public class ReservationController {
 	@RequestMapping(path = "/TripZip/reservation")
 	public ModelAndView toReservation(EmbedSession embedSession, @Param int idSiegeVol) throws Exception {
 		ModelAndView mv = new ModelAndView("/views/frontend/reservation.jsp");
-		DetailsPlace d = DetailsPlace.getByIdSiegeVol(idSiegeVol);
+		DetailsPlace d = DetailsPlace.getByIdSiegeVol(idSiegeVol,false);
 		try (Connection c = Connect.getConnection()) {
 			d.getSiege(c);
 			d.getData(c);	
