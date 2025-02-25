@@ -26,12 +26,12 @@ echo "%destination%"
 if exist "%temp%" (
 	echo deleteing temp folder
   rmdir /s /q "%temp%"
-	echo deleteing bin folder
-  rmdir /s /q "%bin%"
+	@REM echo deleteing bin folder
+  @REM rmdir /s /q "%bin%"
 )
-echo compilation
-call compilateur.bat
-echo compilation done
+@REM echo compilation
+@REM call compilateur.bat
+@REM echo compilation done
 
 mkdir %temp%
 xcopy "%web%\" "%temp%\" /s /e /h /i /y
