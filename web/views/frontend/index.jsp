@@ -7,37 +7,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Available Flights</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    	<link rel="stylesheet" href="/TripZip/assets/style.min.css">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
 </head>
 <body class="min-h-screen bg-gray-50 font-sans antialiased">
-    <!-- Navbar -->
-    <header class="sticky top-0 z-50 w-full border-b bg-white backdrop-blur">
-        <div class="container flex h-16 items-center px-4">
-            <!-- Logo -->
-            <div class="mr-6">
-                <span class="text-lg font-semibold">TripZip</span>
-                </div>
-
-            <!-- Navigation -->
-            <nav class="flex items-center space-x-6 text-sm font-medium">
-                <a href="/TripZip/vols" class="text-blue-600 hover:text-blue-800">Flights</a>
-                <a href="/TripZip/profil" class="text-gray-600 hover:text-gray-800">Reservations</a>
-                </nav>
-
-            <!-- Profile -->
-            <div class="ml-auto flex items-center space-x-4">
-                        <div class="flex items-center gap-2">
-                    <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                        <i class="fas fa-user text-blue-500 text-sm"></i>
-                        </div>
-                    <div>
-                        <p class="text-sm font-medium">john.doe@example.com</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+	<jsp:include page="/views/fragments/header.jsp" />
+   
 
     <!-- Main Content -->
     <main class="container px-4 py-8">
