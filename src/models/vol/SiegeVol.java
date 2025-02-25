@@ -15,7 +15,7 @@ import models.Siege;
 
 public class SiegeVol {
 	private int idSiegeVol;
-	private BigDecimal montant ;
+	private BigDecimal montant = BigDecimal.ZERO;
 	private BigDecimal prom = BigDecimal.ZERO;
 	private int siegeProm;
 	private int idSiege;
@@ -211,7 +211,7 @@ public class SiegeVol {
 		return list;
 	}
 
-	public void save(Connection connection) throws SQLException {
+	public void saveOrUpdate(Connection connection) throws SQLException {
 		boolean nullConn = connection == null;
 		if (nullConn) {
 			connection = database.Connect.getConnection();
@@ -259,5 +259,4 @@ public class SiegeVol {
 	public void setVol(Vol vol) {
 		this.vol = vol;
 	}
-
 }
