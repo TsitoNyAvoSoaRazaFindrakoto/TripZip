@@ -139,7 +139,7 @@ public class DetailsPlace extends Vol {
 	}
 
 	public static DetailsPlace getByIdSiegeVol(int idSiegeVol, boolean  onlyDispo) throws SQLException {
-		String sql = "SELECT * FROM " + (onlyDispo ? "place_dispo" : "details_place") + " WHERE dp.Id_Siege_Vol = ?";
+		String sql = "SELECT * FROM " + (onlyDispo ? "place_dispo" : "details_place") + " WHERE Id_Siege_Vol = ?";
 		return getDetailsPlace(sql, idSiegeVol);
 	}
 
