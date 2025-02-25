@@ -127,6 +127,7 @@ public class SiegesAvions {
 				sa.idSiege = result.getInt("Id_Siege");
 				sa.idAvion = result.getInt("Id_Avion");
 				sa.nombre = result.getInt("nombre");
+				sa.getSiege(connection);
 				list.add(sa);
 			}
 			statement.close();
