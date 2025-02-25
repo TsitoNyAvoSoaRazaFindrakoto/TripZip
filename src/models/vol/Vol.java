@@ -12,6 +12,7 @@ import mg.itu.prom16.annotations.request.Exclude;
 import mg.itu.prom16.annotations.request.FieldAlternate;
 import mg.itu.prom16.annotations.validation.constraints.Required;
 import models.avion.Avion;
+import models.avion.SiegesAvions;
 
 public class Vol {
 	private int idVol;
@@ -206,9 +207,16 @@ public class Vol {
 
 			try (ResultSet generatedKeys = statement.getGeneratedKeys()) { // Get the generated keys
 				if (generatedKeys.next()) {
-					this.idVol = generatedKeys.getInt(1); // Set the new ID in the object
+					this.idVol = generatedKeys.getInt(1);
+					List<SiegesAvions> siegesAvions = getAvion(connection).getSieges(connection);
+					for (SiegesAvions sa : siegesAvions) {
+						SiegeVol sv = new SiegeVol();
+						sv.setIdSiege(sa.getIdSiege());
+						sv.setIdVol(this.idVol);
+						sv.saveOrUpdate(connection);
+					}
 				} else {
-					throw new SQLException("Could not retrieve generated key."); // Handle the case where no key is returned
+					throw new SQLException("Could not retrieve generated key.");
 				}
 			}
 
@@ -333,6 +341,7 @@ public class Vol {
 		}
 		getVilles(c);
 		getAvion(c);
+		getSieges(c);
 		if (local)
 			c.close();
 	}
