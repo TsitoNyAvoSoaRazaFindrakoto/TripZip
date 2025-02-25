@@ -1,79 +1,206 @@
 package models.vol;
 
-public record DetailsPlace(int idSiegeVol, int idVol, int idSiege, int places, int disponible, double prix,
-		int siegesPromo,
-		double prixPromo) {
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-	public static java.util.List<DetailsPlace> getAll(int page, int size) {
-		java.util.List<DetailsPlace> list = new java.util.ArrayList<>();
-		String sql = "SELECT * FROM details_place LIMIT ? OFFSET ?";
-		try (java.sql.Connection conn = database.Connect.getConnection();
-				java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setInt(1, size);
-			pstmt.setInt(2, (page - 1) * size);
-			java.sql.ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				DetailsPlace dp = new DetailsPlace(
-						rs.getInt("Id_Siege_Vol"),
-						rs.getInt("id_vol"),
-						rs.getInt("id_siege"),
-						rs.getInt("places"),
-						rs.getInt("disponible"),
-						rs.getDouble("prix"),
-						rs.getInt("sieges_promo"),
-						rs.getDouble("prix_promo"));
-				list.add(dp);
-			}
-		} catch (java.sql.SQLException e) {
-			e.printStackTrace();
+import database.Connect;
+import models.Siege;
+
+public class DetailsPlace extends Vol {
+
+	private int idSiegeVol;
+	private int idSiege;
+	private int places;
+	private int disponible;
+	private double prix;
+	private int siegesPromo;
+	private double prixPromo;
+
+	private Siege siege;
+
+	public DetailsPlace(int idSiegeVol, int idVol, int idSiege, int places, int disponible, double prix, int siegesPromo,
+			double prixPromo) {
+		this.idSiegeVol = idSiegeVol;
+		setIdVol(idVol);
+		this.idSiege = idSiege;
+		this.places = places;
+		this.disponible = disponible;
+		this.prix = prix;
+		this.siegesPromo = siegesPromo;
+		this.prixPromo = prixPromo;
+	}
+
+	public DetailsPlace(int idVol, int idAvion, LocalDateTime dateVol, LocalDateTime reservation,
+			LocalDateTime annulation, int idVilleDepart, int idVilleArrivee, int idSiegeVol,
+			int idSiege, int places, int disponible, double prix, int siegesPromo, double prixPromo) {
+		super(idVol, idAvion, dateVol, reservation, annulation, idVilleDepart, idVilleArrivee);
+		this.idSiegeVol = idSiegeVol;
+		this.idSiege = idSiege;
+		this.places = places;
+		this.disponible = disponible;
+		this.prix = prix;
+		this.siegesPromo = siegesPromo;
+		this.prixPromo = prixPromo;
+	}
+
+	public int getIdSiegeVol() {
+		return idSiegeVol;
+	}
+
+	public void setIdSiegeVol(int idSiegeVol) {
+		this.idSiegeVol = idSiegeVol;
+	}
+
+	public int getIdSiege() {
+		return idSiege;
+	}
+
+	public void setIdSiege(int idSiege) {
+		this.idSiege = idSiege;
+	}
+
+	public int getPlaces() {
+		return places;
+	}
+
+	public void setPlaces(int places) {
+		this.places = places;
+	}
+
+	public int getDisponible() {
+		return disponible;
+	}
+
+	public void setDisponible(int disponible) {
+		this.disponible = disponible;
+	}
+
+	public double getPrix() {
+		return prix;
+	}
+
+	public void setPrix(double prix) {
+		this.prix = prix;
+	}
+
+	public int getSiegesPromo() {
+		return siegesPromo;
+	}
+
+	public void setSiegesPromo(int siegesPromo) {
+		this.siegesPromo = siegesPromo;
+	}
+
+	public double getPrixPromo() {
+		return prixPromo;
+	}
+
+	public void setPrixPromo(double prixPromo) {
+		this.prixPromo = prixPromo;
+	}
+
+	public static List<DetailsPlace> getAllDispo(Connection conn, Integer page, int size, boolean  onlyDispo)
+			throws Exception {
+		boolean inside = false;
+		if (conn == null) {
+			conn = Connect.getConnection();
+			inside = true;
 		}
+		List<DetailsPlace> list = new ArrayList<>();
+		String sql = "SELECT * FROM " + (onlyDispo ? "place_dispo" : "details_place") + " LIMIT ? OFFSET ?";
+		try (
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setInt(1, size);
+			pstmt.setInt(2, page == null ? 0 : (page - 1) * size);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					list.add(createDetailsPlaceFromResultSet(rs));
+				}
+			}
+		} catch (SQLException e) {
+			conn.close();
+			throw e;
+		}
+		if (inside)
+			conn.close();
 		return list;
 	}
 
-	public static DetailsPlace getByIdVolAndIdSiege(int idVol, int idSiege) {
-		String sql = "SELECT * FROM details_place WHERE id_vol = ? AND id_siege = ?";
-		try (java.sql.Connection conn = database.Connect.getConnection();
-				java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setInt(1, idVol);
-			pstmt.setInt(2, idSiege);
-			java.sql.ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) {
-				return new DetailsPlace(
-						rs.getInt("Id_Siege_Vol"),
-						rs.getInt("id_vol"),
-						rs.getInt("id_siege"),
-						rs.getInt("places"),
-						rs.getInt("disponible"),
-						rs.getDouble("prix"),
-						rs.getInt("sieges_promo"),
-						rs.getDouble("prix_promo"));
+	public static DetailsPlace getByIdVolAndIdSiege(int idVol, int idSiege, boolean  onlyDispo) throws SQLException {
+		String sql = "SELECT * FROM " + (onlyDispo ? "place_dispo" : "details_place") + " where id_vol = ?";
+		return getDetailsPlace(sql, idVol);
+	}
+
+	public static DetailsPlace getByIdSiegeVol(int idSiegeVol, boolean  onlyDispo) throws SQLException {
+		String sql = "SELECT * FROM " + (onlyDispo ? "place_dispo" : "details_place") + " WHERE dp.Id_Siege_Vol = ?";
+		return getDetailsPlace(sql, idSiegeVol);
+	}
+
+	private static DetailsPlace createDetailsPlaceFromResultSet(ResultSet rs) throws SQLException {
+		int idVol = rs.getInt("Id_Vol");
+		int idAvion = rs.getInt("Id_Avion");
+		LocalDateTime dateVol = rs.getObject("date_vol", LocalDateTime.class);
+		LocalDateTime reservation = rs.getObject("reservation", LocalDateTime.class);
+		LocalDateTime annulation = rs.getObject("annulation", LocalDateTime.class);
+		int idVilleDepart = rs.getInt("Id_Ville_Depart");
+		int idVilleArrivee = rs.getInt("Id_Ville_Arrivee");
+		int idSiegeVol = rs.getInt("Id_Siege_Vol");
+		int idSiege = rs.getInt("Id_Siege");
+		int places = rs.getInt("places");
+		int disponible = rs.getInt("disponible");
+		double prix = rs.getDouble("prix");
+		int siegesPromo = rs.getInt("sieges_Promo");
+		double prixPromo = rs.getDouble("prix_Promo");
+
+		return new DetailsPlace(idVol, idAvion, dateVol, reservation, annulation, idVilleDepart, idVilleArrivee, idSiegeVol,
+				idSiege, places, disponible, prix, siegesPromo, prixPromo);
+	}
+
+	private static DetailsPlace getDetailsPlace(String sql, int... params) throws SQLException {
+		try (Connection conn = database.Connect.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			for (int i = 0; i < params.length; i++) {
+				pstmt.setInt(i + 1, params[i]);
 			}
-		} catch (java.sql.SQLException e) {
-			e.printStackTrace();
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					return createDetailsPlaceFromResultSet(rs);
+				}
+			}
+		} catch (SQLException e) {
+			throw e;
 		}
 		return null;
 	}
 
-	public static DetailsPlace getByIdSiegeVol(int idSiegeVol) {
-		String sql = "SELECT * FROM details_place WHERE Id_Siege_Vol = ?";
-		try (java.sql.Connection conn = database.Connect.getConnection();
-				java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setInt(1, idSiegeVol);
-			java.sql.ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) {
-				return new DetailsPlace(
-						rs.getInt("Id_Siege_Vol"),
-						rs.getInt("id_vol"),
-						rs.getInt("id_siege"),
-						rs.getInt("places"),
-						rs.getInt("disponible"),
-						rs.getDouble("prix"),
-						rs.getInt("sieges_promo"),
-						rs.getDouble("prix_promo"));
-			}
-		} catch (java.sql.SQLException e) {
-			e.printStackTrace();
+	public Siege getSiege(Connection c) throws SQLException {
+		boolean local = false;
+		if (c == null) {
+			c = database.Connect.getConnection();
+			local = true;
 		}
-		return null;
+		if (this.siege == null) {
+			this.siege = new models.Siege().getById(c, this.idSiege);
+		}
+		if (local)
+			c.close();
+		return this.siege;
+	}
+
+	public Siege getSiege() {
+		return siege;
+	}
+
+	public void setSiege(Siege siege) {
+		this.siege = siege;
 	}
 }

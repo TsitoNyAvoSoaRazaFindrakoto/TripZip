@@ -45,5 +45,3 @@ jar cf "%war_file%" .
 
 del /f /q /a "%destination%%project_name%.war"
 copy /Y "%war_file%" "%destination%"
-
-

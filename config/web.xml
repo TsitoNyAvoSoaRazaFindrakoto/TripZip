@@ -1,19 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee" version="2.4">
-    <servlet>
-        <servlet-name>FrontServlet</servlet-name>
-        <servlet-class>mg.itu.prom16.FrontController</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>FrontServlet</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
-    <context-param>
-        <param-name>controllerPackage</param-name>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	version="3.1">
+	<servlet>
+		<servlet-name>FrontServlet</servlet-name>
+		<servlet-class>mg.itu.prom16.FrontController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>FrontServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>*.css</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>*.js</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>/images/*</url-pattern>
+	</servlet-mapping>
+
+	<context-param>
+		<param-name>controllerPackage</param-name>
         <param-value>controllers</param-value>
-    </context-param>
-		<context-param>
-        <param-name>roleMapping</param-name>
+	</context-param>
+	<context-param>
+		<param-name>roleMapping</param-name>
         <param-value>role</param-value>
-    </context-param>
+	</context-param>
 </web-app>
