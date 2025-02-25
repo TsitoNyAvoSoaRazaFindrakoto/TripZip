@@ -36,8 +36,16 @@ public class StaffController {
 	}
 
 	@RequestMapping(path = "/TripZip/vols/detail")
-	public ModelAndView toDetail(@Param int idVol) {
-		return new ModelAndView("/views/backend/detail.jsp");
+	public ModelAndView toDetail(@Param int idVol) throws Exception {
+		ModelAndView mv = new ModelAndView("/views/backend/vol/detail.jsp");
+		try (Connection c = Connect.getConnection()) {
+			Vol v = new Vol().getById(c, idVol);
+			v.getData(c);
+			mv.setAttribute("vol", v);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mv;
 	}
 
 	@Fallback(method = "GET", verb = "/vols/form")
