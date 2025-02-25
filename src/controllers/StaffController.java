@@ -90,7 +90,7 @@ public class StaffController {
 	public ModelAndView updateSiegeVol(@ParamObject SiegeVol siegeVol) throws Exception {
 		ModelAndView mv = new ModelAndView();
 		try (Connection c = Connect.getConnection()) {
-			siegeVol.update(c);
+			siegeVol.saveOrUpdate(c);
 		}
 		mv.setView("/vols/detail?idVol=" + siegeVol.getIdVol());
 		return mv;
