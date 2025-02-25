@@ -21,6 +21,8 @@ public class SiegeVol {
 	private int idSiege;
 	private int idVol;
 
+
+	
 	@Exclude
 	private Siege siege;
 	@Exclude
