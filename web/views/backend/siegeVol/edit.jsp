@@ -58,8 +58,8 @@
             </div>
             <div class="p-6">
                 <form action="/TripZip/vols/sieges/edit" method="POST">
-                    <input type="hidden" name="idSiegeVol" value="<%= siegeVol.getIdSiegeVol() %>">
-                    <input type="hidden" name="idVol" value="<%= siegeVol.getIdVol() %>">
+                    <input type="hidden" name="idSiegeVol" value="<%=siegeVol.getIdSiegeVol()%>">
+                    <input type="hidden" name="idVol" value="<%=siegeVol.getIdVol()%>">
                     
                     <div class="mb-6">
                         <label for="idSiege" class="block text-sm font-medium text-gray-700 mb-2">Type de siège</label>
