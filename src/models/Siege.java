@@ -63,7 +63,7 @@ public class Siege {
 		if (nullConn)
 			connection = database.Connect.getConnection();
 		try {
-			java.sql.PreparedStatement statement = connection.prepareStatement("SELECT * FROM Siege");
+			java.sql.PreparedStatement statement = connection.prepareStatement("SELECT * FROM Siege order by id_siege asc");
 			java.sql.ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				Siege siege = new Siege(result.getInt("Id_Siege"), result.getString("nom"));

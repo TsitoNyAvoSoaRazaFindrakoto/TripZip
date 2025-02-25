@@ -119,7 +119,7 @@ public class SiegeVol {
 			connection = database.Connect.getConnection();
 		try {
 			java.sql.PreparedStatement statement = connection
-					.prepareStatement("SELECT * FROM Siege_Vol WHERE Id_Siege_Vol = ?");
+					.prepareStatement("SELECT * FROM Siege_Vol WHERE Id_Siege_Vol = ? order by id_siege asc");
 			statement.setInt(1, id);
 			java.sql.ResultSet result = statement.executeQuery();
 			if (result.next()) {
@@ -151,7 +151,7 @@ public class SiegeVol {
 			connection = database.Connect.getConnection();
 		try {
 			java.sql.PreparedStatement statement = connection
-					.prepareStatement("SELECT * FROM Siege_Vol WHERE id_vol = ?");
+					.prepareStatement("SELECT * FROM Siege_Vol WHERE id_vol = ? order by id_siege asc");
 			statement.setInt(1, idVol);
 			java.sql.ResultSet result = statement.executeQuery();
 			while (result.next()) {

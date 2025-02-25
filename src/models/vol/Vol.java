@@ -40,6 +40,7 @@ public class Vol {
 	@Exclude
 	private List<SiegeVol> sieges;
 
+
 	public Vol() {
 	}
 
