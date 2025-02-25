@@ -1,0 +1,122 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="models.vol.Vol" %>
+<%@ page import="models.vol.Ville" %>
+<%@ page import="models.avion.Avion" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ...existing head code... -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Détails du Vol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        border: "hsl(214.3 31.8% 91.4%)",
+                        input: "hsl(214.3 31.8% 91.4%)",
+                        ring: "hsl(215 20.2% 65.1%)",
+                        background: "hsl(0 0% 100%)",
+                        foreground: "hsl(222.2 47.4% 11.2%)",
+                        primary: {
+                            DEFAULT: "hsl(222.2 47.4% 11.2%)",
+                            foreground: "hsl(210 40% 98%)",
+                        },
+                        secondary: {
+                            DEFAULT: "hsl(210 40% 96.1%)",
+                            foreground: "hsl(222.2 47.4% 11.2%)",
+                        },
+                        muted: {
+                            DEFAULT: "hsl(210 40% 96.1%)",
+                            foreground: "hsl(215.4 16.3% 46.9%)",
+                        },
+                        accent: {
+                            DEFAULT: "hsl(210 40% 96.1%)",
+                            foreground: "hsl(222.2 47.4% 11.2%)",
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-background font-sans antialiased">
+    <!-- Navbar -->
+    <header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
+        <div class="container flex h-16 items-center px-4">
+            <!-- Logo -->
+            <div class="mr-6 hidden md:flex">
+                <span class="text-lg font-semibold">TripZip</span>
+            </div>
+            <!-- Navigation -->
+            <nav class="flex items-center space-x-6 text-sm font-medium">
+                <a href="/TripZip/vols" class="transition-colors hover:text-foreground/80 text-foreground/60">
+                    Flights
+                </a>
+                <a href="#" class="transition-colors hover:text-foreground/80 text-foreground/60">
+                    Reservations
+                </a>
+            </nav>
+            <!-- Profile -->
+            <div class="ml-auto flex items-center space-x-4">
+                <div class="flex items-center gap-2">
+                    <div class="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                        <i class="fas fa-user text-muted-foreground text-sm"></i>
+                    </div>
+                    <div class="hidden sm:block">
+                        <p class="text-sm font-medium">john.doe@example.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container px-4 py-8">
+        <div class="mb-8 space-y-1">
+            <h1 class="text-3xl font-semibold tracking-tight">Détails du Vol</h1>
+            <p class="text-sm text-muted-foreground">Informations complètes du vol</p>
+        </div>
+        <%
+            Vol vol = (Vol) request.getAttribute("vol");
+            if(vol != null) {
+                Avion avion = vol.getAvion();
+                Ville villeDepart = vol.getVilleDepart();
+                Ville villeArrivee = vol.getVilleArrivee();
+        %>
+        <div class="bg-card p-6 rounded-lg border">
+            <div class="mb-4">
+                <h2 class="text-xl font-semibold">Vol #<%= vol.getIdVol() %></h2>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2">
+                <div>
+                    <p class="text-sm text-muted-foreground">Date du Vol</p>
+                    <p class="text-sm font-medium"><%= vol.getDateVol() %></p>
+                </div>
+                <div>
+                    <p class="text-sm text-muted-foreground">Avion</p>
+                    <p class="text-sm font-medium"><%= avion != null ? avion.getModele() : "N/A" %></p>
+                </div>
+                <div>
+                    <p class="text-sm text-muted-foreground">Ville de Départ</p>
+                    <p class="text-sm font-medium"><%= villeDepart != null ? villeDepart.getNom() : "N/A" %></p>
+                </div>
+                <div>
+                    <p class="text-sm text-muted-foreground">Ville d'Arrivée</p>
+                    <p class="text-sm font-medium"><%= villeArrivee != null ? villeArrivee.getNom() : "N/A" %></p>
+                </div>
+            </div>
+        </div>
+        <%
+            } else {
+        %>
+        <p class="text-sm text-muted-foreground">Aucun vol trouvé.</p>
+        <%
+            }
+        %>
+    </main>
+</body>
+</html>
