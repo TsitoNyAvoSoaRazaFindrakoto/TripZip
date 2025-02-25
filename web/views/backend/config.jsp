@@ -8,7 +8,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Modifier Configuration de Réservation</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    	<link rel="stylesheet" href="/TripZip/assets/style.min.css">
+
   </head>
   <body class="min-h-screen bg-background font-sans antialiased">
     <jsp:include page="/views/fragments/header.jsp" />
