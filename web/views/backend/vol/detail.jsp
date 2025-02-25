@@ -156,7 +156,7 @@
 										<%= siegeVol != null && siegeVol.getProm().doubleValue() > 0 ? siegeVol.getProm() + " %" : "Aucune" %>
 									</td>
 									<td class="border border-gray-300 px-3 py-2">
-										<a href="/TripZip/vols/sieges/edit?id=<%= siegeVol != null ? siegeVol.getIdSiegeVol() : 0 %>" 
+										<a href="/TripZip/vols/sieges/edit?idSiegeVol=<%=siegeVol.getIdSiegeVol()%>" 
 											class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2">
 											<i class="fas fa-edit mr-2"></i>
 											Modifier
