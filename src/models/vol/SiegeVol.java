@@ -144,6 +144,41 @@ public class SiegeVol {
 		return this;
 	}
 
+	public static List<SiegeVol> getByIdVol(java.sql.Connection connection, int idVol) {
+		List<SiegeVol> list = new ArrayList<>();
+		boolean nullConn = connection == null;
+		if (nullConn)
+			connection = database.Connect.getConnection();
+		try {
+			java.sql.PreparedStatement statement = connection
+					.prepareStatement("SELECT * FROM Siege_Vol WHERE id_vol = ?");
+			statement.setInt(1, idVol);
+			java.sql.ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				SiegeVol sv = new SiegeVol();
+				sv.idSiegeVol = result.getInt("Id_Siege_Vol");
+				sv.montant = result.getBigDecimal("montant");
+				sv.prom = result.getBigDecimal("prom");
+				sv.siegeProm = result.getInt("siege_prom");
+				sv.idSiege = result.getInt("Id_Siege");
+				sv.idVol = result.getInt("Id_Vol");
+				sv.getSiege(connection);
+				list.add(sv);
+			}
+			statement.close();
+			if (nullConn)
+				connection.close();
+		} catch (Exception e) {
+			try {
+				connection.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 	public static List<SiegeVol> getAll(java.sql.Connection connection) {
 		List<SiegeVol> list = new ArrayList<>();
 		boolean nullConn = connection == null;
