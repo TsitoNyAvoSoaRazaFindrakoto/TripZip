@@ -277,6 +277,7 @@ public class Vol {
 		}
 		if (this.avion == null) {
 			this.avion = new Avion().getById(c, this.idAvion);
+			this.avion.getSieges(c);
 		}
 		if (local)
 			c.close();
