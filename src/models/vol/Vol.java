@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import mg.itu.prom16.annotations.request.Exclude;
 import mg.itu.prom16.annotations.request.FieldAlternate;
@@ -19,6 +20,9 @@ public class Vol {
 	private LocalDateTime dateVol;
 	private LocalDateTime reservation;
 	private LocalDateTime annulation;
+	@Exclude
+	private boolean etat;
+
 	@Required
 	@FieldAlternate(name = "villeDepart")
 	private int idVilleDepart;
@@ -32,6 +36,9 @@ public class Vol {
 	private Ville villeDepart;
 	@Exclude
 	private Ville villeArrivee;
+
+	@Exclude
+	private List<SiegeVol> sieges;
 
 	public Vol() {
 	}
@@ -114,6 +121,7 @@ public class Vol {
 				this.idAvion = result.getInt("Id_Avion");
 				this.idVilleDepart = result.getInt("Id_Ville_Depart");
 				this.idVilleArrivee = result.getInt("Id_Ville_Arrivee");
+				this.etat = result.getBoolean("etat");
 			}
 			statement.close();
 			if (nullConn)
@@ -151,6 +159,7 @@ public class Vol {
 				vol.idAvion = result.getInt("Id_Avion");
 				vol.idVilleDepart = result.getInt("Id_Ville_Depart");
 				vol.idVilleArrivee = result.getInt("Id_Ville_Arrivee");
+				vol.etat = result.getBoolean("etat");
 				list.add(vol);
 			}
 			statement.close();
@@ -237,6 +246,29 @@ public class Vol {
 		}
 	}
 
+	public static void teminerVol(java.sql.Connection connection, int idVol) {
+		boolean nullConn = connection == null;
+		if (nullConn)
+			connection = database.Connect.getConnection();
+		try {
+			String query = "UPDATE Vol SET etat = ? WHERE Id_Vol = ?";
+			java.sql.PreparedStatement statement = connection.prepareStatement(query);
+			statement.setBoolean(1, true);
+			statement.setInt(2, idVol);
+			statement.executeUpdate();
+			statement.close();
+			if (nullConn)
+				connection.close();
+		} catch (Exception e) {
+			try {
+				connection.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+	}
+
 	public Avion getAvion(Connection c) throws SQLException {
 		boolean local = false;
 		if (c == null) {
@@ -287,7 +319,8 @@ public class Vol {
 		}
 		getVilleArrivee(c);
 		getVilleDepart(c);
-		if (local) c.close();
+		if (local)
+			c.close();
 	}
 
 	public void getData(Connection c) throws SQLException {
@@ -324,5 +357,32 @@ public class Vol {
 
 	public void setVilleArrivee(Ville villeArrivee) {
 		this.villeArrivee = villeArrivee;
+	}
+
+	public List<SiegeVol> getSieges() {
+		return sieges;
+	}
+
+	public void setSieges(List<SiegeVol> sieges) {
+		this.sieges = sieges;
+	}
+
+	public void getSieges(Connection c) throws SQLException {
+		boolean local = false;
+		if (c == null) {
+			c = database.Connect.getConnection();
+			local = true;
+		}
+		sieges = SiegeVol.getByIdVol(c, idVol);
+		if (local)
+			c.close();
+	}
+
+	public boolean isEtat() {
+		return etat;
+	}
+
+	public void setEtat(boolean etat) {
+		this.etat = etat;
 	}
 }
