@@ -185,7 +185,7 @@ public class Reservation {
 		return this.siegeVol;
 	}
 
-	public void validateReservation() throws ReservationValidationException, SQLException {
+	public void validateReservation() throws Exception {
 		try (Connection c = Connect.getConnection()) {
 			SiegeVol siegeVol = this.getSiegeVol(c);
 			if (siegeVol == null) {
@@ -206,7 +206,7 @@ public class Reservation {
 				throw new InvalidSeatQuantityException("Number of seats requested must be positive.");
 			}
 
-			DetailsPlace details = DetailsPlace.getByIdVolAndIdSiege(vol.getIdVol(), siegeVol.getIdSiege(),true);
+			DetailsPlace details = DetailsPlace.getByIdVolAndIdSiege(vol.getIdVol(), siegeVol.getIdSiege(), true);
 			if (details == null) {
 				throw new ReservationValidationException("Seat details not found.");
 			}
