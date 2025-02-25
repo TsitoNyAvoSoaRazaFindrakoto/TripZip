@@ -14,6 +14,8 @@ import models.avion.Avion;
 import models.reservation.ConfigReservation;
 import models.vol.Ville;
 import models.vol.Vol;
+import models.vol.SiegeVol;
+import models.Siege;
 
 @Controller
 @Auth(role = "admin")
@@ -30,7 +32,6 @@ public class StaffController {
 			}
 			mv.setAttribute("villes", Ville.getAll(c));
 			mv.setAttribute("avions", Avion.getAll(c));
-			mv.setAttribute("config", ConfigReservation.getAll(c));
 		}
 		return mv;
 	}
@@ -51,12 +52,14 @@ public class StaffController {
 	@Fallback(method = "GET", verb = "/vols/form")
 	@RequestMapping(path = "/TripZip/vols", method = "POST")
 	public ModelAndView createVol(@ParamObject Vol vol) throws Exception {
-		ModelAndView mv = new ModelAndView("/vols");
+		ModelAndView mv = new ModelAndView();
 		if (vol.getIdVol() == 0) {
 			vol.save(null);
+			vol.getData(null);
 		} else {
 			vol.update(null);
 		}
+		mv.setView("/vols/details?idVol=" + vol.getIdVol());
 		return mv;
 	}
 
@@ -66,6 +69,30 @@ public class StaffController {
 		try (Connection c = Connect.getConnection()) {
 			mv.setAttribute("config", new ConfigReservation().getById(c, libelle));
 		}
+		return mv;
+	}
+
+	@RequestMapping(path = "/TripZip/vols/sieges/edit")
+	public ModelAndView modifySiegeVolDet(@Param Integer id) throws Exception {
+		ModelAndView mv = new ModelAndView("/views/backend/siegeVol/edit.jsp");
+		try (Connection c = Connect.getConnection()) {
+			if (id != null) {
+				SiegeVol siegeVol = new SiegeVol().getById(c, id);
+				mv.setAttribute("siegeVol", siegeVol);
+				mv.setAttribute("sieges", Siege.getAll(c));
+			}
+		}
+		return mv;
+	}
+
+	@Fallback(method = "GET", verb = "/vols/sieges/edit")
+	@RequestMapping(path = "/TripZip/vols/sieges/edit", method = "POST")
+	public ModelAndView updateSiegeVol(@ParamObject SiegeVol siegeVol) throws Exception {
+		ModelAndView mv = new ModelAndView();
+		try (Connection c = Connect.getConnection()) {
+			siegeVol.update(c);
+		}
+		mv.setView("/vols/detail?idVol=" + siegeVol.getIdVol());
 		return mv;
 	}
 
