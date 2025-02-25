@@ -15,6 +15,7 @@ SELECT
 	SA.nombre AS places,
 	(SA.nombre - COALESCE(SUM(R.nombre), 0)) AS disponible,
 	SV.montant AS prix,
+	V.etat as etat,
 	CASE
 		WHEN SV.siege_prom > COALESCE(SUM(R.nombre), 0) THEN SV.siege_prom - COALESCE(SUM(R.nombre), 0)
 		ELSE 0
@@ -39,9 +40,12 @@ GROUP BY
 	SV.montant,
 	SV.siege_prom,
 	SV.prom,
-	SV.Id_Siege_Vol
+	SV.Id_Siege_Vol,
+	V.etat
 HAVING
 	(SA.nombre - COALESCE(SUM(R.nombre), 0)) > 0
 order by
 	v.id_vol,
 	sv.id_siege_vol;
+
+create or replace view place_dispo as select * from details_place where etat is false;
