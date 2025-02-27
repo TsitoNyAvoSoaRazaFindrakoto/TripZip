@@ -18,7 +18,7 @@ public class VolController {
 	public ModelAndView toClient(EmbedSession embedSession, @Param Integer page) throws Exception {
 		ModelAndView mv = new ModelAndView("/views/frontend/index.jsp");
 		try (Connection c = Connect.getConnection()) {
-			List<DetailsPlace> detailsPlace = DetailsPlace.getAllDispo(c, page, 8,false);
+			List<DetailsPlace> detailsPlace = DetailsPlace.getAll(c, page, 8,false);
 			detailsPlace.stream().forEach(d -> {
 				try {
 					d.getData(c);
