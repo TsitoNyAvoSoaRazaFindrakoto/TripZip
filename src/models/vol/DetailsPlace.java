@@ -104,7 +104,7 @@ public class DetailsPlace extends Vol {
 		this.prixPromo = prixPromo;
 	}
 
-	public static List<DetailsPlace> getAllDispo(Connection conn, Integer page, int size, boolean  onlyDispo)
+	public static List<DetailsPlace> getAll(Connection conn, Integer page, int size, boolean onlyDispo)
 			throws Exception {
 		boolean inside = false;
 		if (conn == null) {
@@ -112,7 +112,7 @@ public class DetailsPlace extends Vol {
 			inside = true;
 		}
 		List<DetailsPlace> list = new ArrayList<>();
-		String sql = "SELECT * FROM " + (onlyDispo ? "place_dispo" : "details_place") + " LIMIT ? OFFSET ?";
+		String sql = "SELECT * FROM " + (onlyDispo ? "vols_dispo" : "vols_details") + " LIMIT ? OFFSET ?";
 		try (
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -133,13 +133,39 @@ public class DetailsPlace extends Vol {
 		return list;
 	}
 
-	public static DetailsPlace getByIdVolAndIdSiege(int idVol, int idSiege, boolean  onlyDispo) throws SQLException {
-		String sql = "SELECT * FROM " + (onlyDispo ? "place_dispo" : "details_place") + " where id_vol = ?";
+	public static List<DetailsPlace> getByIdVol(Connection conn, int idVol)
+			throws Exception {
+		boolean inside = false;
+		if (conn == null) {
+			conn = Connect.getConnection();
+			inside = true;
+		}
+		List<DetailsPlace> list = new ArrayList<>();
+		String sql = "SELECT * FROM details_place where id_vol = ?";
+		try (
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1, idVol);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					list.add(createDetailsPlaceFromResultSet(rs));
+				}
+			}
+		} catch (SQLException e) {
+			conn.close();
+			throw e;
+		}
+		if (inside)
+			conn.close();
+		return list;
+	}
+
+	public static DetailsPlace getByIdVolAndIdSiege(int idVol, int idSiege, boolean onlyDispo) throws SQLException {
+		String sql = "SELECT * FROM " + (onlyDispo ? "vols_dispo" : "vols_details") + " where id_vol = ?";
 		return getDetailsPlace(sql, idVol);
 	}
 
-	public static DetailsPlace getByIdSiegeVol(int idSiegeVol, boolean  onlyDispo) throws SQLException {
-		String sql = "SELECT * FROM " + (onlyDispo ? "place_dispo" : "details_place") + " WHERE Id_Siege_Vol = ?";
+	public static DetailsPlace getByIdSiegeVol(int idSiegeVol, boolean onlyDispo) throws SQLException {
+		String sql = "SELECT * FROM " + (onlyDispo ? "vols_dispo" : "vols_details") + " WHERE Id_Siege_Vol = ?";
 		return getDetailsPlace(sql, idSiegeVol);
 	}
 
