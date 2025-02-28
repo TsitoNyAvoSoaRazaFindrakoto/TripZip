@@ -229,4 +229,62 @@ public class DetailsPlace extends Vol {
 	public void setSiege(Siege siege) {
 		this.siege = siege;
 	}
+
+	public static List<DetailsPlace> getByCriteria(Connection conn, FormDTO form) throws Exception {
+		boolean inside = false;
+		if (conn == null) {
+			conn = Connect.getConnection();
+			inside = true;
+		}
+		List<DetailsPlace> list = new ArrayList<>();
+		StringBuilder sql = new StringBuilder("SELECT * FROM details_place WHERE 1=1"); // Start with a true condition
+
+		// Add criteria based on FormDTO fields
+		if (form.getDateMin() != null) {
+			sql.append(" AND date_vol >= ?");
+		}
+		if (form.getDateMax() != null) {
+			sql.append(" AND date_vol <= ?");
+		}
+		if (form.getVilleDepart() != null) {
+			sql.append(" AND Id_Ville_Depart = ?");
+		}
+		if (form.getVilleArrivee() != null) {
+			sql.append(" AND Id_Ville_Arrivee = ?");
+		}
+		if (form.getSiege() != null) {
+			sql.append(" AND Id_Siege = ?");
+		}
+
+		try (PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
+			int paramIndex = 1;
+			if (form.getDateMin() != null) {
+				pstmt.setObject(paramIndex++, form.getDateMin().atStartOfDay()); // Convert LocalDate to LocalDateTime
+			}
+			if (form.getDateMax() != null) {
+				pstmt.setObject(paramIndex++, form.getDateMax().atStartOfDay().plusDays(1).minusNanos(1));
+			}
+			if (form.getVilleDepart() != null) {
+				pstmt.setInt(paramIndex++, form.getVilleDepart());
+			}
+			if (form.getVilleArrivee() != null) {
+				pstmt.setInt(paramIndex++, form.getVilleArrivee());
+			}
+			if (form.getSiege() != null) {
+				pstmt.setInt(paramIndex++, form.getSiege());
+			}
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					list.add(createDetailsPlaceFromResultSet(rs));
+				}
+			}
+		} catch (SQLException e) {
+			conn.close();
+			throw e;
+		}
+		if (inside)
+			conn.close();
+		return list;
+	}
 }
