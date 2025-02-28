@@ -33,9 +33,12 @@ public class FormDTO {
 	public Integer getSiege() {
 		return siege;
 	}
+
 	public void setSiege(Integer siege) {
 		this.siege = siege;
 	}
+
+	
 	
 	
 }
