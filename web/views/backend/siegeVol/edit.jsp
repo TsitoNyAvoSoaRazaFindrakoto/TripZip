@@ -8,7 +8,7 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Détails du Vol</title>
-	<link rel="stylesheet" href="/TripZip/assets/style.min.css">
+	<script src="https://cdn.tailwindcss.com"></script>
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
 	<script>
 		tailwind.config = {
@@ -43,7 +43,7 @@
 	</script>
 </head>
 <body class="min-h-screen bg-background font-sans antialiased">
-	<jsp:include page="/views/fragments/header.jsp" />
+<jsp:include page="../../fragments/header.jsp" />
 
 <%
     SiegeVol siegeVol = (SiegeVol) request.getAttribute("siegeVol");
@@ -58,8 +58,8 @@
             </div>
             <div class="p-6">
                 <form action="/TripZip/vols/sieges/edit" method="POST">
-                    <input type="hidden" name="idSiegeVol" value="<%=siegeVol.getIdSiegeVol()%>">
-                    <input type="hidden" name="idVol" value="<%=siegeVol.getIdVol()%>">
+                    <input type="hidden" name="idSiegeVol" value="<%= siegeVol.getIdSiegeVol() %>">
+                    <input type="hidden" name="idVol" value="<%= siegeVol.getIdVol() %>">
                     
                     <div class="mb-6">
                         <label for="idSiege" class="block text-sm font-medium text-gray-700 mb-2">Type de siège</label>
