@@ -230,14 +230,15 @@ public class DetailsPlace extends Vol {
 		this.siege = siege;
 	}
 
-	public static List<DetailsPlace> getByCriteria(Connection conn, FormDTO form) throws Exception {
+	public static List<DetailsPlace> getByCriteria(Connection conn, FormDTO form, boolean onlyDispo) throws Exception {
+		String table = onlyDispo ? "vols_dispo" : "vols_details";
 		boolean inside = false;
 		if (conn == null) {
 			conn = Connect.getConnection();
 			inside = true;
 		}
 		List<DetailsPlace> list = new ArrayList<>();
-		StringBuilder sql = new StringBuilder("SELECT * FROM details_place WHERE 1=1"); // Start with a true condition
+		StringBuilder sql = new StringBuilder("SELECT * FROM " + table + " WHERE 1=1");
 
 		// Add criteria based on FormDTO fields
 		if (form.getDateMin() != null) {
@@ -253,7 +254,7 @@ public class DetailsPlace extends Vol {
 			sql.append(" AND Id_Ville_Arrivee = ?");
 		}
 		if (form.getSiege() != null) {
-			sql.append(" AND Id_Siege = ?");
+			sql.append(" AND id_vol in (select id_vol from " + table + " where Id_Siege = ?)");
 		}
 
 		try (PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
