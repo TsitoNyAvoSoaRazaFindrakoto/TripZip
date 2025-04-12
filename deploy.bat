@@ -30,7 +30,7 @@ if exist "%temp%" (
   rmdir /s /q "%bin%"
 )
 echo compilation
-call compilateur.bat
+@REM call compilateur.bat
 echo compilation done
 
 mkdir %temp%
