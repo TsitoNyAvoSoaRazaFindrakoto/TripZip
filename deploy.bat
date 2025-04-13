@@ -33,6 +33,7 @@ if exist "%temp%" (
 @REM call compilateur.bat
 @REM echo compilation done
 
+
 mkdir %temp%
 xcopy "%web%\" "%temp%\" /s /e /h /i /y
 xcopy "%bin%\" "%temp%\WEB-INF\classes\" /s /e /h /i /y
