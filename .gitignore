@@ -3,4 +3,5 @@ bin
 .temp/
 *.war
 .vscode/
+.idea/
 test.html
