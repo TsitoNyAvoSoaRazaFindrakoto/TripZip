@@ -4,7 +4,7 @@ public class Connect {
 	// connection credentials (user, password, database) postgresql
 	private static final String URL = "jdbc:postgresql://localhost:5432/";
 	private static final String USER = "postgres";
-	private static final String PASSWORD = "postgre";
+	private static final String PASSWORD = "postgres";
 	private static final String DATABASE = "tripzip";
 
 	// getConnection static method
