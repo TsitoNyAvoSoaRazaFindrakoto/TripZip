@@ -4,7 +4,7 @@ Proof of Concept - Sprint Framework: Flight Ticketing
 		- town
 		- seat type
 		- plane(model,number of seats per type,production date)
-		- flight ( price per seat type)
+		- flight(price per seat type)
 		- seat flight reservation
 	functionalities:
 		- user login
@@ -12,7 +12,7 @@ Proof of Concept - Sprint Framework: Flight Ticketing
 			- crud flight
 			- multi-criterion flight search
 			- business rule 1: a number of seats have discount (per flight)
-			- business rule 2: reservation time (eg: <= 3 hours before flight)
+			- business rule 2: reservation time(eg: <= 3 hours before flight)
 			- business rule 3: cancellation time(eg: <= 2 hours before flight)
 		front office
 			- multi-criterion flight search
@@ -36,4 +36,4 @@ Proof of Concept - Sprint Framework: Flight Ticketing
 		additional functionalities
 			- page for editing maximum age for children discount viability on another app made with Spring
 			- additional reservation fields (reservation members) in another app
-			- adding button for pdf export on the a
+			- button export to PDF of flight reservation details
