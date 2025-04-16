@@ -1,5 +1,5 @@
 Proof of Concept - Sprint Framework: Flight Ticketing
-	entity: 
+	main entities: 
 		- user
 		- town
 		- seat type
@@ -7,8 +7,8 @@ Proof of Concept - Sprint Framework: Flight Ticketing
 		- flight ( price per seat type)
 		- seat flight reservation
 	functionalities:
+		- user login
 		back office
-			- user login
 			- crud flight
 			- multi-criterion flight search
 			- business rule 1: a number of seats have discount (per flight)
@@ -19,5 +19,21 @@ Proof of Concept - Sprint Framework: Flight Ticketing
 			- seat flight reservation
 		additional functionalities:
  			- business rule 4: children have discount on flight reservation
- 			- additional configuration 
- 			- PDF export for flight details
+ 			- additional configuration for flight reservation (users registry) 
+ 			- PDF export for flight details:
+ 					_ API to deliver data
+ 					_ PDF exporter on another app made with Spring
+ 	pages:
+		- user login
+		- reservation details
+		back office
+			- crud flight
+			- multi-criterion flight search
+			- page for business rule 2 and 3 values modification
+		front office
+			- multi-criterion flight search
+			- seat flight reservation
+		additional functionalities
+			- page for editing maximum age for children discount viability on another app made with Spring
+			- additional reservation fields (reservation members) in another app
+			- adding button for pdf export on the a
