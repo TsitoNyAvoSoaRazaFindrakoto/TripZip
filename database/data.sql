@@ -47,12 +47,13 @@ VALUES
 	('London'),
 	('Sydney');
 
--- Insert data into Config_reservation
+-- Insert data into rule_config
 INSERT INTO
-	Config_reservation (libelle, duree)
+	rule_config (id, value)
 VALUES
 	('reservation', '08:00'),
-	('annulation', '05:00');
+	('annulation', '05:00'),
+	('reduc_enfant', '0.9');
 
 -- Insert data into Vol (without reservation and annulation)
 INSERT INTO
@@ -74,23 +75,22 @@ VALUES
 INSERT INTO
 	Siege_Vol (montant, prom, siege_prom, Id_Siege, Id_Vol)
 VALUES
-	(500.00, 0.00, 0, 1, 1), -- ECO, Paris to NY
-	(800.00, 0.05, 10, 2, 1), -- BUSINESS, Paris to NY (with promo)
-	(1200.00, 0.00, 0, 3, 1), -- VIP, Paris to NY
-	(700.00, 0.00, 0, 1, 2), -- ECO, NY to Tokyo
-	(1000.00, 0.00, 0, 2, 2), -- BUSINESS, NY to Tokyo
-	(1500.00, 0.10, 5, 3, 2), -- VIP, NY to Tokyo (with promo)
-	(400.00, 0.00, 0, 1, 3), -- ECO, Tokyo to London
-	(600.00, 0.00, 0, 2, 3), -- BUSINESS, Tokyo to London
-	(900.00, 0.00, 0, 3, 3), -- VIP, Tokyo to London
-	(300.00, 0.00, 0, 1, 4), -- ECO, London to Sydney
-	(500.00, 0.00, 0, 2, 4), -- BUSINESS, London to Sydney
-	(750.00, 0.00, 0, 3, 4), -- VIP, London to Sydney
-	(600.00, 0.00, 0, 1, 5), -- ECO, Sydney to Paris
-	(900.00, 0.00, 0, 2, 5), -- BUSINESS, Sydney to Paris
+	(500.00, 0.00, 0, 1, 1),
+	(800.00, 0.05, 10, 2, 1),
+	(1200.00, 0.00, 0, 3, 1),
+	(700.00, 0.00, 0, 1, 2),
+	(1000.00, 0.00, 0, 2, 2),
+	(1500.00, 0.10, 5, 3, 2),
+	(400.00, 0.00, 0, 1, 3),
+	(600.00, 0.00, 0, 2, 3),
+	(900.00, 0.00, 0, 3, 3),
+	(300.00, 0.00, 0, 1, 4),
+	(500.00, 0.00, 0, 2, 4),
+	(750.00, 0.00, 0, 3, 4),
+	(600.00, 0.00, 0, 1, 5),
+	(900.00, 0.00, 0, 2, 5),
 	(1300.00, 0.00, 0, 3, 5);
-
--- Create a new reservation for user 3 (client2@example.com)
+	
 INSERT INTO
 	Reservation (
 		date_reservation,
@@ -100,10 +100,4 @@ INSERT INTO
 		Id_Siege_Vol
 	)
 VALUES
-	(
-		'2024-03-14 09:30:00', -- Reservation date
-		1368.00, -- Total price (2 seats with 5% discount)
-		2, -- Number of seats
-		3, -- User ID 3 (client2@example.com)
-		2 -- Siege_Vol ID 2 (BUSINESS class Paris-NY with promo
-	);
+	('2024-03-14 09:30:00', 1368.00, 2, 3, 2);
