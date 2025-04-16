@@ -45,6 +45,7 @@ CREATE TABLE Vol (
 CREATE TABLE Siege_Vol (
 	Id_Siege_Vol SERIAL,
 	montant NUMERIC(17, 2) NOT NULL,
+	montant_enfant numeric(17,2) not null default montant,
 	prom NUMERIC(4, 2) NOT NULL default 0,
 	siege_prom INTEGER NOT NULL default 0,
 	Id_Siege INTEGER NOT NULL,
@@ -70,6 +71,7 @@ CREATE TABLE Reservation (
 	date_reservation TIMESTAMP NOT NULL,
 	prix NUMERIC(17, 2) NOT NULL,
 	nombre INTEGER NOT NULL,
+	enfants integer not null,
 	Id_Utilisateur INTEGER NOT NULL,
 	Id_Siege_Vol INTEGER NOT NULL,
 	PRIMARY KEY (Id_Reservation),

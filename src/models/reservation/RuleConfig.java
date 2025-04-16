@@ -5,7 +5,7 @@ import java.time.LocalTime;
 
 public class RuleConfig {
 	private String id;
-	private LocalTime value;
+	private String value;
 
 	public RuleConfig() {
 	}
@@ -18,11 +18,23 @@ public class RuleConfig {
 		this.id = libelle;
 	}
 
-	public LocalTime getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(LocalTime duree) {
+	public LocalTime getValueAsTime() {
+		return LocalTime.parse(value);
+	}
+
+	public int getValueAsInt() {
+		return Integer.parseInt(value);
+	}
+
+	public double getValueAsDouble() {
+		return Double.parseDouble(value);
+	}
+
+	public void setValue(String duree) {
 		this.value = duree;
 	}
 
@@ -37,7 +49,7 @@ public class RuleConfig {
 			java.sql.ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				this.id = result.getString("id");
-				this.value = LocalTime.parse(result.getString("value"));
+				this.value = result.getString("value");
 			}
 			statement.close();
 			if (nullConn)
@@ -64,7 +76,7 @@ public class RuleConfig {
 			while (result.next()) {
 				RuleConfig cr = new RuleConfig();
 				cr.id = result.getString("id");
-				cr.value = result.getTime("value").toLocalTime();
+				cr.value = result.getString("value");
 				list.add(cr);
 			}
 			statement.close();

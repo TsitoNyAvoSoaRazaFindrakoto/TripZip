@@ -27,6 +27,7 @@ public class Reservation {
 	private int idReservation;
 	private int idSiegeVol;
 	private int idUtilisateur;
+	private int enfants;
 	@Exclude
 	private LocalDateTime dateReservation = LocalDateTime.now();
 	@Exclude
@@ -196,7 +197,7 @@ public class Reservation {
 			if (vol == null) {
 				throw new ReservationValidationException("Associated Vol not found.");
 			}
-
+			
 			LocalDateTime reservationDeadline = vol.getReservation();
 			if (reservationDeadline == null || this.dateReservation.isAfter(reservationDeadline)) {
 				throw new ReservationDeadlineException("Reservation is past the deadline.");
@@ -218,8 +219,7 @@ public class Reservation {
 			int discountedSeats = details.getSiegesPromo();
 			int normalSeats = this.nombre - discountedSeats;
 			setPrix(
-					BigDecimal.valueOf(
-							Math.round(discountedSeats * details.getPrixPromo() + normalSeats * details.getPrix() / this.nombre)));
+					BigDecimal.valueOf(Math.round(discountedSeats * details.getPrixPromo() + normalSeats * details.getPrix() / this.nombre)));
 		} catch (Exception e) {
 			throw e;
 		}
@@ -239,6 +239,14 @@ public class Reservation {
 
 	public void setSiegeVol(SiegeVol siegeVol) {
 		this.siegeVol = siegeVol;
+	}
+
+	public int getEnfants() {
+		return enfants;
+	}
+
+	public void setEnfants(int enfants) {
+		this.enfants = enfants;
 	}
 
 }
