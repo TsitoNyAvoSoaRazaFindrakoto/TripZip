@@ -31,10 +31,10 @@ if [ -d "$temp" ]; then
     # rm -rf "$bin"
 fi
 
-echo "compilation"
+# echo "compilation"
 # Call compilation script
 # ./compilateur.sh
-echo "compilation done"
+# echo "compilation done"
 
 mkdir -p "$temp"
 cp -r "$web/"* "$temp/"
@@ -50,3 +50,4 @@ jar cf "$war_file" .
 
 rm -f "$destination$project_name.war"
 cp "$war_file" "$destination"
+rm -f "$war_file"
