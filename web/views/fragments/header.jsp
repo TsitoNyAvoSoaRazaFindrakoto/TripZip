@@ -1,6 +1,6 @@
 <!-- Navbar -->
 <header
-  class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur"
+  class="sticky top-0 z-50 w-full bg-gray-50 border-b border-gray-200"
 >
   <div class="container flex h-16 items-center px-4">
     <!-- Logo -->
