@@ -59,11 +59,12 @@ select
 	Id_Ville_Depart,
 	Id_Ville_Arrivee,
 	etat,
+	prix,
+	prix_Promo,
 	sum(places) as places,
 	sum(disponible) as disponible,
 	sum(sieges_promo) as sieges_promo,
 	0 as Id_Siege_Vol,
-	0 as prix,
 	0 as Id_Siege
 from
 	details_place
@@ -76,7 +77,9 @@ group by
 	Id_Avion,
 	Id_Ville_Depart,
 	Id_Ville_Arrivee,
-	etat;
+	etat,
+	prix_Promo,
+	prix;
 
 create
 or replace view vols_dispo as
