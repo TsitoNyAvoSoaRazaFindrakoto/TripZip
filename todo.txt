@@ -21,8 +21,8 @@ Proof of Concept - Sprint Framework: Flight Ticketing
  			- business rule 4: children have discount on flight reservation
  			- additional configuration for flight reservation (users registry) 
  			- PDF export for flight details:
- 					_ API to deliver data
- 					_ PDF exporter on another app made with Spring
+ 				- API to deliver data
+ 				- PDF exporter on another app made with Spring
  	pages:
 		- user login
 		- reservation details
@@ -36,4 +36,5 @@ Proof of Concept - Sprint Framework: Flight Ticketing
 		additional functionalities
 			- page for editing maximum age for children discount viability on another app made with Spring
 			- additional reservation fields (reservation members) in another app
-			- button export to PDF of flight reservation details
+			- api to get the details of a flight reservation as byte data
+			- export to PDF of flight reservation details
