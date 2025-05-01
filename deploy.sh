@@ -39,7 +39,7 @@ fi
 mkdir -p "$temp"
 cp -r "$web/"* "$temp/"
 mkdir -p "$temp/WEB-INF/classes"
-cp -r "$bin/" "$temp/WEB-INF/classes/"
+cp -r "$bin/"* "$temp/WEB-INF/classes/"
 cp -r "$web_xml/"* "$temp/WEB-INF/"
 mkdir -p "$temp/WEB-INF/lib"
 cp -r "$lib/"* "$temp/WEB-INF/lib/"
