@@ -29,6 +29,7 @@ public class ReservationController {
 			c.commit();
 		} catch (ReservationValidationException e) {
 			mv.setAttribute("error", e.getMessage());
+			System.err.println(e.getMessage());
 			mv.setView("/reservation?idSiegeVol="+reservation.getIdSiegeVol());
 			return mv;
 		}

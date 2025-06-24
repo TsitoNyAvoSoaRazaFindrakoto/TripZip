@@ -96,8 +96,9 @@ INSERT INTO
 		date_reservation,
 		prix,
 		nombre,
+	    enfants,
 		Id_Utilisateur,
 		Id_Siege_Vol
 	)
 VALUES
-	('2024-03-14 09:30:00', 1368.00, 2, 3, 2);
+	('2024-03-14 09:30:00', 1368.00,0, 2, 3, 2);

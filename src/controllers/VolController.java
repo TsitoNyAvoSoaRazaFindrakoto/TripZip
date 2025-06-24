@@ -31,7 +31,7 @@ public class VolController {
 					return;
 				}
 			});
-			mv.setAttribute("count", Connect.getCount(c, "vols_details"));
+			mv.setAttribute("count", Connect.getCount(c, "details_vols"));
 			mv.setAttribute("page", page == null ? 1 : page);
 			mv.setAttribute("vols", detailsPlace);
 		} catch (Exception e) {

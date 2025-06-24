@@ -45,7 +45,7 @@ CREATE TABLE Vol (
 CREATE TABLE Siege_Vol (
 	Id_Siege_Vol SERIAL,
 	montant NUMERIC(17, 2) NOT NULL,
-	montant_enfant numeric(17,2) not null default montant,
+	montant_enfant numeric(17,2) not null default 0,
 	prom NUMERIC(4, 2) NOT NULL default 0,
 	siege_prom INTEGER NOT NULL default 0,
 	Id_Siege INTEGER NOT NULL,

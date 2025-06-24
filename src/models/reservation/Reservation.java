@@ -28,8 +28,8 @@ public class Reservation {
 	private int idSiegeVol;
 	private int idUtilisateur;
 	private int enfants;
-	@Exclude
-	private LocalDateTime dateReservation = LocalDateTime.now();
+	// @Exclude
+	private LocalDateTime dateReservation;
 	@Exclude
 	private BigDecimal prix;
 	@Min(1)
@@ -199,7 +199,7 @@ public class Reservation {
 			}
 			
 			LocalDateTime reservationDeadline = vol.getReservation();
-			if (reservationDeadline == null || this.dateReservation.isAfter(reservationDeadline)) {
+			if (reservationDeadline != null && this.dateReservation.isAfter(reservationDeadline)) {
 				throw new ReservationDeadlineException("Reservation is past the deadline.");
 			}
 
