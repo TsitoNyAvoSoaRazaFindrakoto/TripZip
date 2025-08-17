@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load environment variables from .env file
-while IFS='=' read -r key value; do
+while IFS='=' read -r key value || [[ -n "$key" ]]; do
     if [[ ! $key =~ ^#.*$ && -n $key ]]; then
         export "$key=$value"
     fi
@@ -18,28 +18,25 @@ temp="$work_dir/.temp"
 war_file="$work_dir/$project_name.war"
 destination="$TOMCAT_WEBAPPS/"
 
-echo "$project_name"
-echo "$work_dir"
-echo "$destination"
 
 # --- CREATE TEMP FOLDER ---
 # Delete temp folder if it exists
 if [ -d "$temp" ]; then
-    echo "deleting temp folder"
+    # echo "deleting temp folder"
     rm -rf "$temp"
     # echo "deleting bin folder"
     # rm -rf "$bin"
 fi
 
-echo "compilation"
+# echo "compilation"
 # Call compilation script
 # ./compilateur.sh
-echo "compilation done"
+# echo "compilation done"
 
 mkdir -p "$temp"
 cp -r "$web/"* "$temp/"
 mkdir -p "$temp/WEB-INF/classes"
-cp -r "$bin/" "$temp/WEB-INF/classes/"
+cp -r "$bin/"* "$temp/WEB-INF/classes/"
 cp -r "$web_xml/"* "$temp/WEB-INF/"
 mkdir -p "$temp/WEB-INF/lib"
 cp -r "$lib/"* "$temp/WEB-INF/lib/"
