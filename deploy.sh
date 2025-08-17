@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load environment variables from .env file
-while IFS='=' read -r key value; do
+while IFS='=' read -r key value || [[ -n "$key" ]]; do
     if [[ ! $key =~ ^#.*$ && -n $key ]]; then
         export "$key=$value"
     fi
@@ -18,14 +18,11 @@ temp="$work_dir/.temp"
 war_file="$work_dir/$project_name.war"
 destination="$TOMCAT_WEBAPPS/"
 
-echo "$project_name"
-echo "$work_dir"
-echo "$destination"
 
 # --- CREATE TEMP FOLDER ---
 # Delete temp folder if it exists
 if [ -d "$temp" ]; then
-    echo "deleting temp folder"
+    # echo "deleting temp folder"
     rm -rf "$temp"
     # echo "deleting bin folder"
     # rm -rf "$bin"
@@ -50,4 +47,3 @@ jar cf "$war_file" .
 
 rm -f "$destination$project_name.war"
 cp "$war_file" "$destination"
-rm -f "$war_file"
