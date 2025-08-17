@@ -104,7 +104,7 @@ public class DetailsPlace extends Vol {
 		this.prixPromo = prixPromo;
 	}
 
-	public static List<DetailsPlace> getAllDispo(Connection conn, Integer page, int size, boolean  onlyDispo)
+	public static List<DetailsPlace> getAll(Connection conn, Integer page, int size, boolean onlyDispo)
 			throws Exception {
 		boolean inside = false;
 		if (conn == null) {
@@ -112,7 +112,7 @@ public class DetailsPlace extends Vol {
 			inside = true;
 		}
 		List<DetailsPlace> list = new ArrayList<>();
-		String sql = "SELECT * FROM " + (onlyDispo ? "place_dispo" : "details_place") + " LIMIT ? OFFSET ?";
+		String sql = "SELECT * FROM " + (onlyDispo ? "vols_dispo" : "details_vols") + " LIMIT ? OFFSET ?";
 		try (
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -133,13 +133,39 @@ public class DetailsPlace extends Vol {
 		return list;
 	}
 
-	public static DetailsPlace getByIdVolAndIdSiege(int idVol, int idSiege, boolean  onlyDispo) throws SQLException {
-		String sql = "SELECT * FROM " + (onlyDispo ? "place_dispo" : "details_place") + " where id_vol = ?";
+	public static List<DetailsPlace> getByIdVol(Connection conn, int idVol)
+			throws Exception {
+		boolean inside = false;
+		if (conn == null) {
+			conn = Connect.getConnection();
+			inside = true;
+		}
+		List<DetailsPlace> list = new ArrayList<>();
+		String sql = "SELECT * FROM details_place where id_vol = ?";
+		try (
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1, idVol);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					list.add(createDetailsPlaceFromResultSet(rs));
+				}
+			}
+		} catch (SQLException e) {
+			conn.close();
+			throw e;
+		}
+		if (inside)
+			conn.close();
+		return list;
+	}
+
+	public static DetailsPlace getByIdVolAndIdSiege(int idVol, int idSiege, boolean onlyDispo) throws SQLException {
+		String sql = "SELECT * FROM " + (onlyDispo ? "vols_dispo" : "details_vols") + " where id_vol = ?";
 		return getDetailsPlace(sql, idVol);
 	}
 
-	public static DetailsPlace getByIdSiegeVol(int idSiegeVol, boolean  onlyDispo) throws SQLException {
-		String sql = "SELECT * FROM " + (onlyDispo ? "place_dispo" : "details_place") + " WHERE dp.Id_Siege_Vol = ?";
+	public static DetailsPlace getByIdSiegeVol(int idSiegeVol, boolean onlyDispo) throws SQLException {
+		String sql = "SELECT * FROM " + (onlyDispo ? "vols_dispo" : "details_vols") + " WHERE Id_Siege_Vol = ?";
 		return getDetailsPlace(sql, idSiegeVol);
 	}
 
@@ -202,5 +228,64 @@ public class DetailsPlace extends Vol {
 
 	public void setSiege(Siege siege) {
 		this.siege = siege;
+	}
+
+	public static List<DetailsPlace> getByCriteria(Connection conn, FormDTO form, boolean onlyDispo) throws Exception {
+		String table = onlyDispo ? "vols_dispo" : "details_vols";
+		boolean inside = false;
+		if (conn == null) {
+			conn = Connect.getConnection();
+			inside = true;
+		}
+		List<DetailsPlace> list = new ArrayList<>();
+		StringBuilder sql = new StringBuilder("SELECT * FROM " + table + " WHERE 1=1");
+
+		// Add criteria based on FormDTO fields
+		if (form.getDateMin() != null) {
+			sql.append(" AND date_vol >= ?");
+		}
+		if (form.getDateMax() != null) {
+			sql.append(" AND date_vol <= ?");
+		}
+		if (form.getVilleDepart() != null) {
+			sql.append(" AND Id_Ville_Depart = ?");
+		}
+		if (form.getVilleArrivee() != null) {
+			sql.append(" AND Id_Ville_Arrivee = ?");
+		}
+		if (form.getSiege() != null) {
+			sql.append(" AND id_vol in (select id_vol from " + table + " where Id_Siege = ?)");
+		}
+
+		try (PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
+			int paramIndex = 1;
+			if (form.getDateMin() != null) {
+				pstmt.setObject(paramIndex++, form.getDateMin().atStartOfDay()); // Convert LocalDate to LocalDateTime
+			}
+			if (form.getDateMax() != null) {
+				pstmt.setObject(paramIndex++, form.getDateMax().atStartOfDay().plusDays(1).minusNanos(1));
+			}
+			if (form.getVilleDepart() != null) {
+				pstmt.setInt(paramIndex++, form.getVilleDepart());
+			}
+			if (form.getVilleArrivee() != null) {
+				pstmt.setInt(paramIndex++, form.getVilleArrivee());
+			}
+			if (form.getSiege() != null) {
+				pstmt.setInt(paramIndex++, form.getSiege());
+			}
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					list.add(createDetailsPlaceFromResultSet(rs));
+				}
+			}
+		} catch (SQLException e) {
+			conn.close();
+			throw e;
+		}
+		if (inside)
+			conn.close();
+		return list;
 	}
 }

@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Creation de Vol</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    	<link rel="stylesheet" href="/TripZip/assets/style.min.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
@@ -12,32 +13,8 @@
     </style>
 </head>
 <body class="min-h-screen bg-background font-sans antialiased">
-    <!-- Navbar -->
-    <header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div class="container flex h-14 items-center px-4">
-            <div class="mr-6 hidden md:flex">
-                <span class="text-lg font-semibold">TripZip</span>
-            </div>
-            <nav class="flex items-center space-x-3 text-sm font-medium">
-                <a href="/TripZip/vols" class="transition-colors hover:text-foreground text-foreground/80">
-                    Vols
-                </a>
-                <a href="#" class="transition-colors hover:text-foreground text-foreground/80">
-                    Reservations
-                </a>
-            </nav>
-            <div class="ml-auto flex items-center space-x-2">
-                <div class="flex items-center gap-2">
-                    <div class="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
-                        <i class="fas fa-user text-muted-foreground text-sm"></i>
-                    </div>
-                    <div class="hidden sm:block">
-                        <p class="text-sm font-medium">john.doe@exemple.com</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+	<jsp:include page="/views/fragments/header.jsp" />
+    
 
     <!-- Formulaire -->
     <main class="container px-4 py-8">

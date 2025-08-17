@@ -19,7 +19,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Book your flight - TripZip</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    	<link rel="stylesheet" href="/TripZip/assets/style.min.css">
+
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       rel="stylesheet"
@@ -126,27 +127,45 @@
             </div>
           </div>
 
-          <div class="space-y-2">
-            <label for="nombre" class="block text-sm font-medium text-gray-700"
-              >Number of Seats</label
-            >
-            <div class="mt-1">
-              <input
-                type="number"
-                name="nombre"
-                id="nombre"
-                min="1"
-                max="<%= vol.getDisponible() %>"
-                class="border rounded-lg p-4"
-                placeholder="1"
-                value="1"
-                required
-              />
-            </div>
-            <p class="text-sm text-gray-500">
-              Maximum available seats: <%= vol.getDisponible() %>
-            </p>
-          </div>
+          <div>
+						<div class="space-y-2">
+							<label for="nombre" class="block text-sm font-medium text-gray-700"
+								>Number of Seats</label
+							>
+							<div class="mt-1">
+								<input
+									type="number"
+									name="nombre"
+									id="nombre"
+									min="1"
+									max="<%= vol.getDisponible() %>"
+									class="border rounded-lg p-4"
+									placeholder="1"
+									value="1"
+									required
+								/>
+							</div>
+							<p class="text-sm text-gray-500">
+								Maximum available seats: <%= vol.getDisponible() %>
+							</p>
+						</div>
+	
+						<div class="space-y-2">
+							<label for="dateReservation" class="block text-sm font-medium text-gray-700"
+								>Reservation date</label
+							>
+							<div class="mt-1">
+								<input
+									type="datetime-local"
+									name="dateReservation"
+									id="dateReservation"
+									class="border rounded-lg p-4"
+									placeholder="1"
+									required
+								/>
+							</div>
+						</div>
+					</div>
 
           <div>
             <button

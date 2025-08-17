@@ -116,10 +116,12 @@ public class Vol {
 				this.idVol = result.getInt("Id_Vol");
 				this.dateVol = result.getTimestamp("date_vol").toLocalDateTime();
 				// reservation and annulation may be nullable
+				
 				java.sql.Timestamp resTimestamp = result.getTimestamp("reservation");
 				this.reservation = resTimestamp != null ? resTimestamp.toLocalDateTime() : null;
 				java.sql.Timestamp annTimestamp = result.getTimestamp("annulation");
 				this.annulation = annTimestamp != null ? annTimestamp.toLocalDateTime() : null;
+
 				this.idAvion = result.getInt("Id_Avion");
 				this.idVilleDepart = result.getInt("Id_Ville_Depart");
 				this.idVilleArrivee = result.getInt("Id_Ville_Arrivee");

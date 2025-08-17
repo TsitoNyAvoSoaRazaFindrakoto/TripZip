@@ -8,7 +8,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Modifier Configuration de Réservation</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    	<link rel="stylesheet" href="/TripZip/assets/style.min.css">
+
   </head>
   <body class="min-h-screen bg-background font-sans antialiased">
     <jsp:include page="/views/fragments/header.jsp" />
@@ -22,9 +23,9 @@
           <label class="text-sm font-medium">Libellé : valeur actuelle</label>
           <input
             type="text"
-            name="libelle"
+            name="id"
 						readonly
-						value="<%=configuration.getLibelle()%>"
+						value="<%=configuration.getId()%>"
 						class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
           />
         </div>
@@ -33,8 +34,8 @@
           <label class="text-sm font-medium">Durée (HH:MM)</label>
 						<input
 						type="time"
-						name="duree"
-						value="<%=configuration.getDuree()%>"
+						name="value"
+						value="<%=configuration.getValue()%>"
 						required
 						class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
 						/>

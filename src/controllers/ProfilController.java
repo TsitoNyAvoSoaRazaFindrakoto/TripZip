@@ -14,11 +14,14 @@ import models.reservation.Reservation;
 
 @Controller
 public class ProfilController {
+
+	// redirect to login page
 	@RequestMapping(path = "/TripZip/login")
 	public ModelAndView toLogin() {
 		return new ModelAndView("/views/login.jsp");
 	}
 
+	// LOGIN method
 	@RequestMapping(path = "/TripZip/login", method = "POST")
 	public ModelAndView toRegister(EmbedSession embedSession, @Param String email, @Param String mdp) {
 		ModelAndView mv = new ModelAndView();
@@ -34,6 +37,7 @@ public class ProfilController {
 		return mv;
 	}
 
+	// LOGOUT redirect to register page
 	@RequestMapping(path = "/TripZip/logout")
 	public ModelAndView toLogout(EmbedSession embedSession) {
 		embedSession.remove("utilisateur");
@@ -41,6 +45,7 @@ public class ProfilController {
 		return new ModelAndView("/login");
 	}
 
+	// redirect to profile page
 	@RequestMapping(path = "/TripZip/profil")
 	public ModelAndView toClient(EmbedSession embedSession) throws Exception {
 		ModelAndView mv = new ModelAndView("/views/frontend/profil.jsp");

@@ -8,8 +8,8 @@ SELECT
 	V.date_vol,
 	V.reservation,
 	V.annulation,
-	V.Id_Avion, 
-	V.Id_Ville_Depart, 
+	V.Id_Avion,
+	V.Id_Ville_Depart,
 	V.Id_Ville_Arrivee,
 	SA.Id_Siege,
 	SA.nombre AS places,
@@ -48,4 +48,44 @@ order by
 	v.id_vol,
 	sv.id_siege_vol;
 
-create or replace view place_dispo as select * from details_place where etat is false;
+create
+or replace view details_vols as
+select
+	Id_Vol,
+	date_vol,
+	reservation,
+	annulation,
+	Id_Avion,
+	Id_Ville_Depart,
+	Id_Ville_Arrivee,
+	etat,
+	prix,
+	prix_Promo,
+	sum(places) as places,
+	sum(disponible) as disponible,
+	sum(sieges_promo) as sieges_promo,
+	0 as Id_Siege_Vol,
+	0 as Id_Siege
+from
+	details_place
+group by
+	id_vol,
+	Id_Vol,
+	date_vol,
+	reservation,
+	annulation,
+	Id_Avion,
+	Id_Ville_Depart,
+	Id_Ville_Arrivee,
+	etat,
+	prix_Promo,
+	prix;
+
+create
+or replace view vols_dispo as
+select
+	*
+from
+	details_vols
+where
+	etat is false;

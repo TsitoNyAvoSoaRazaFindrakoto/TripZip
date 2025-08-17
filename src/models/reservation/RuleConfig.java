@@ -3,41 +3,53 @@ package models.reservation;
 import java.sql.Time;
 import java.time.LocalTime;
 
-public class ConfigReservation {
-	private String libelle;
-	private LocalTime duree;
+public class RuleConfig {
+	private String id;
+	private String value;
 
-	public ConfigReservation() {
+	public RuleConfig() {
 	}
 
-	public String getLibelle() {
-		return libelle;
+	public String getId() {
+		return id;
 	}
 
-	public void setLibelle(String libelle) {
-		this.libelle = libelle;
+	public void setId(String libelle) {
+		this.id = libelle;
 	}
 
-	public LocalTime getDuree() {
-		return duree;
+	public String getValue() {
+		return value;
 	}
 
-	public void setDuree(LocalTime duree) {
-		this.duree = duree;
+	public LocalTime getValueAsTime() {
+		return LocalTime.parse(value);
 	}
 
-	public ConfigReservation getById(java.sql.Connection connection, String libelle) {
+	public int getValueAsInt() {
+		return Integer.parseInt(value);
+	}
+
+	public double getValueAsDouble() {
+		return Double.parseDouble(value);
+	}
+
+	public void setValue(String duree) {
+		this.value = duree;
+	}
+
+	public RuleConfig getById(java.sql.Connection connection, String libelle) {
 		boolean nullConn = connection == null;
 		if (nullConn)
 			connection = database.Connect.getConnection();
 		try {
 			java.sql.PreparedStatement statement = connection
-					.prepareStatement("SELECT * FROM Config_reservation WHERE libelle = ?");
+					.prepareStatement("SELECT * FROM rule_config WHERE libelle = ?");
 			statement.setString(1, libelle);
 			java.sql.ResultSet result = statement.executeQuery();
 			if (result.next()) {
-				this.libelle = result.getString("libelle");
-				this.duree = LocalTime.parse(result.getString("duree"));
+				this.id = result.getString("id");
+				this.value = result.getString("value");
 			}
 			statement.close();
 			if (nullConn)
@@ -53,18 +65,18 @@ public class ConfigReservation {
 		return this;
 	}
 
-	public static java.util.List<ConfigReservation> getAll(java.sql.Connection connection) {
-		java.util.List<ConfigReservation> list = new java.util.ArrayList<>();
+	public static java.util.List<RuleConfig> getAll(java.sql.Connection connection) {
+		java.util.List<RuleConfig> list = new java.util.ArrayList<>();
 		boolean nullConn = connection == null;
 		if (nullConn)
 			connection = database.Connect.getConnection();
 		try {
-			java.sql.PreparedStatement statement = connection.prepareStatement("SELECT * FROM Config_reservation");
+			java.sql.PreparedStatement statement = connection.prepareStatement("SELECT * FROM rule_config");
 			java.sql.ResultSet result = statement.executeQuery();
 			while (result.next()) {
-				ConfigReservation cr = new ConfigReservation();
-				cr.libelle = result.getString("libelle");
-				cr.duree = result.getTime("duree").toLocalTime();
+				RuleConfig cr = new RuleConfig();
+				cr.id = result.getString("id");
+				cr.value = result.getString("value");
 				list.add(cr);
 			}
 			statement.close();
@@ -89,9 +101,9 @@ public class ConfigReservation {
 		try {
 			connection.setAutoCommit(!nullConn);
 			java.sql.PreparedStatement statement = connection
-					.prepareStatement("update config_reservation set duree=? where libelle=?");
-			statement.setTime(1, Time.valueOf(duree));
-			statement.setString(2, libelle);
+					.prepareStatement("update rule_config set duree=? where libelle=?");
+			statement.setTime(1, Time.valueOf(value));
+			statement.setString(2, id);
 			statement.executeUpdate();
 			statement.close();
 			if (nullConn) {
@@ -107,7 +119,7 @@ public class ConfigReservation {
 
 	@Override
 	public String toString() {
-		return "ConfigReservation [libelle=" + libelle + "datetime, duree=" + duree.toString() + "] and in time "
-				+ Time.valueOf(duree);
+		return "ConfigReservation [libelle=" + id + "datetime, duree=" + value.toString() + "] and in time "
+				+ Time.valueOf(value);
 	}
 }
