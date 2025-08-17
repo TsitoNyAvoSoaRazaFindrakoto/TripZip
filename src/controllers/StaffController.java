@@ -10,12 +10,12 @@ import mg.itu.prom16.annotations.request.Controller;
 import mg.itu.prom16.annotations.request.RequestMapping;
 import mg.itu.prom16.annotations.validation.Fallback;
 import mg.itu.prom16.types.returnType.ModelAndView;
+import models.Siege;
 import models.avion.Avion;
 import models.reservation.RuleConfig;
+import models.vol.SiegeVol;
 import models.vol.Ville;
 import models.vol.Vol;
-import models.vol.SiegeVol;
-import models.Siege;
 
 @Controller
 @Auth(role = "admin")
@@ -59,7 +59,7 @@ public class StaffController {
 		} else {
 			vol.update(null);
 		}
-		mv.setView("/vols/details?idVol=" + vol.getIdVol());
+		mv.setView("/vols/detail?idVol=" + vol.getIdVol());
 		return mv;
 	}
 
