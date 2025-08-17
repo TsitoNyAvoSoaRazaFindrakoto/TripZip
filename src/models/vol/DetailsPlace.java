@@ -112,7 +112,7 @@ public class DetailsPlace extends Vol {
 			inside = true;
 		}
 		List<DetailsPlace> list = new ArrayList<>();
-		String sql = "SELECT * FROM " + (onlyDispo ? "vols_dispo" : "vols_details") + " LIMIT ? OFFSET ?";
+		String sql = "SELECT * FROM " + (onlyDispo ? "vols_dispo" : "details_vols") + " LIMIT ? OFFSET ?";
 		try (
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -160,12 +160,12 @@ public class DetailsPlace extends Vol {
 	}
 
 	public static DetailsPlace getByIdVolAndIdSiege(int idVol, int idSiege, boolean onlyDispo) throws SQLException {
-		String sql = "SELECT * FROM " + (onlyDispo ? "vols_dispo" : "vols_details") + " where id_vol = ?";
+		String sql = "SELECT * FROM " + (onlyDispo ? "vols_dispo" : "details_vols") + " where id_vol = ?";
 		return getDetailsPlace(sql, idVol);
 	}
 
 	public static DetailsPlace getByIdSiegeVol(int idSiegeVol, boolean onlyDispo) throws SQLException {
-		String sql = "SELECT * FROM " + (onlyDispo ? "vols_dispo" : "vols_details") + " WHERE Id_Siege_Vol = ?";
+		String sql = "SELECT * FROM " + (onlyDispo ? "vols_dispo" : "details_vols") + " WHERE Id_Siege_Vol = ?";
 		return getDetailsPlace(sql, idSiegeVol);
 	}
 
@@ -231,7 +231,7 @@ public class DetailsPlace extends Vol {
 	}
 
 	public static List<DetailsPlace> getByCriteria(Connection conn, FormDTO form, boolean onlyDispo) throws Exception {
-		String table = onlyDispo ? "vols_dispo" : "vols_details";
+		String table = onlyDispo ? "vols_dispo" : "details_vols";
 		boolean inside = false;
 		if (conn == null) {
 			conn = Connect.getConnection();

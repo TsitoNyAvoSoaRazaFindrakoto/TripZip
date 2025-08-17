@@ -9,7 +9,7 @@ DROP FUNCTION IF EXISTS update_vol_dates();
 DROP VIEW IF EXISTS details_place;
 
 -- Drop tables in reverse order of creation to avoid foreign key constraints
-DROP TABLE IF EXISTS Config_reservation;
+DROP TABLE IF EXISTS rule_config;
 DROP TABLE IF EXISTS Reservation;
 DROP TABLE IF EXISTS Sieges_Avions;
 DROP TABLE IF EXISTS Siege_Vol;

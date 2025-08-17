@@ -16,6 +16,7 @@ import models.Siege;
 public class SiegeVol {
 	private int idSiegeVol;
 	private BigDecimal montant = BigDecimal.ZERO;
+	private BigDecimal montantEnfant = BigDecimal.ZERO;
 	private BigDecimal prom = BigDecimal.ZERO;
 	private int siegeProm;
 	private int idSiege;
@@ -127,6 +128,7 @@ public class SiegeVol {
 			if (result.next()) {
 				this.idSiegeVol = result.getInt("Id_Siege_Vol");
 				this.montant = result.getBigDecimal("montant");
+				this.montantEnfant = result.getBigDecimal("montant_enfant");
 				this.prom = result.getBigDecimal("prom");
 				this.siegeProm = result.getInt("siege_prom");
 				this.idSiege = result.getInt("Id_Siege");
@@ -160,6 +162,7 @@ public class SiegeVol {
 				SiegeVol sv = new SiegeVol();
 				sv.idSiegeVol = result.getInt("Id_Siege_Vol");
 				sv.montant = result.getBigDecimal("montant");
+				sv.montantEnfant = result.getBigDecimal("montant_enfant");
 				sv.prom = result.getBigDecimal("prom");
 				sv.siegeProm = result.getInt("siege_prom");
 				sv.idSiege = result.getInt("Id_Siege");
@@ -193,6 +196,7 @@ public class SiegeVol {
 				SiegeVol sv = new SiegeVol();
 				sv.idSiegeVol = result.getInt("Id_Siege_Vol");
 				sv.montant = result.getBigDecimal("montant");
+				sv.montantEnfant = result.getBigDecimal("montant_enfant");
 				sv.prom = result.getBigDecimal("prom");
 				sv.siegeProm = result.getInt("siege_prom");
 				sv.idSiege = result.getInt("Id_Siege");
@@ -261,4 +265,13 @@ public class SiegeVol {
 	public void setVol(Vol vol) {
 		this.vol = vol;
 	}
+
+	public BigDecimal getMontantEnfant() {
+		return montantEnfant;
+	}
+
+	public void setMontantEnfant(BigDecimal montantEnfant) {
+		this.montantEnfant = montantEnfant;
+	}
+
 }

@@ -11,7 +11,7 @@ import mg.itu.prom16.annotations.request.RequestMapping;
 import mg.itu.prom16.annotations.validation.Fallback;
 import mg.itu.prom16.types.returnType.ModelAndView;
 import models.avion.Avion;
-import models.reservation.ConfigReservation;
+import models.reservation.RuleConfig;
 import models.vol.Ville;
 import models.vol.Vol;
 import models.vol.SiegeVol;
@@ -67,7 +67,7 @@ public class StaffController {
 	public ModelAndView toConfig(@Param String libelle) throws Exception {
 		ModelAndView mv = new ModelAndView("/views/backend/config.jsp");
 		try (Connection c = Connect.getConnection()) {
-			mv.setAttribute("config", new ConfigReservation().getById(c, libelle));
+			mv.setAttribute("config", new RuleConfig().getById(c, libelle));
 		}
 		return mv;
 	}
@@ -97,7 +97,7 @@ public class StaffController {
 	}
 
 	@RequestMapping(path = "/TripZip/config", method = "POST")
-	public ModelAndView updateConfig(@ParamObject ConfigReservation conf) throws Exception {
+	public ModelAndView updateConfig(@ParamObject RuleConfig conf) throws Exception {
 		ModelAndView mv = new ModelAndView("/vols");
 		try (Connection c = Connect.getConnection()) {
 			conf.update(c);
